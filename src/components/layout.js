@@ -1,29 +1,18 @@
 import React, { useContext } from "react";
-import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import theme from "../utils/theme";
 import { MenuContext } from "../contexts/MenuContext";
 import { Link } from "gatsby";
+import { bottomMenu } from "../translations";
+import { SettingsContext } from "../contexts/SettingsContext";
+import { menuHeight } from "../utils/constants";
 
-const GlobalStyle = createGlobalStyle`
-html{
-  background-color: #222831;
-  color: white;
-}
-body,html{
-  margin: 0;
-  padding: 0;
-}
-
-*,*::before,*::after{
-  box-sizing: border-box;
-}
-`;
 const BottomMenu = styled.div`
-  position: sticky;
+  position: fixed;
   overflow: hidden;
   bottom: 0;
   left: 0;
-  height: 80px;
+  height: ${menuHeight};
   width: 100%;
   background-color: ${({ theme }) => theme.colors.lightBlue};
   z-index: 111;
@@ -31,8 +20,9 @@ const BottomMenu = styled.div`
   /* justify-content: space-around; */
   align-items: center;
   opacity: ${({ menuShown }) => (menuShown ? 1 : 0)};
-  transform: scale(${({ menuShown }) => (menuShown ? 1 : 0)});
-  transition: opacity 1s ease;
+  transform: scaleY(${({ menuShown }) => (menuShown ? 1 : 0)});
+  transform-origin: bottom;
+  transition: opacity 1s ease, transform 0.5s ease;
 `;
 const StyledLink = styled(Link)`
   font-size: 1.5rem;
@@ -41,7 +31,7 @@ const StyledLink = styled(Link)`
   flex-basis: 0;
   text-align: center;
   height: 100%;
-  line-height: 80px;
+  line-height: ${menuHeight};
   color: ${({ theme }) => theme.colors.white};
   &.page-active {
     background-color: ${({ theme }) => theme.colors.darkBlue};
@@ -51,18 +41,22 @@ const StyledLink = styled(Link)`
 
 const Layout = ({ children }) => {
   const { menuShown } = useContext(MenuContext);
+  const {
+    settings: { currentLanguage },
+  } = useContext(SettingsContext);
   return (
     <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      {children}
-      <BottomMenu menuShown={menuShown}>
-        <StyledLink to="/" activeClassName="page-active">
-          overwiew
-        </StyledLink>
-        <StyledLink to="/training" activeClassName="page-active">
-          training
-        </StyledLink>
-      </BottomMenu>
+      <>
+        {children}
+        <BottomMenu menuShown={menuShown}>
+          <StyledLink to="/" activeClassName="page-active">
+            {bottomMenu.overwiew[currentLanguage]}
+          </StyledLink>
+          <StyledLink to="/training" activeClassName="page-active">
+            {bottomMenu.training[currentLanguage]}
+          </StyledLink>
+        </BottomMenu>
+      </>
     </ThemeProvider>
   );
 };

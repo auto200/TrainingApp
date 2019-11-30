@@ -1,7 +1,15 @@
-/**
- * Implement Gatsby's SSR (Server Side Rendering) APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/ssr-apis/
- */
+const React = require("react");
+const GlobalStyle = require("./src/utils/GlobalStyle").default;
+const SettingsContextProvider = require("./src/contexts/SettingsContext")
+  .default;
+const MaterialUiThemeProvider = require("./src/contexts/MaterialUiTheme")
+  .default;
 
-// You can delete this file if you're not using it
+exports.wrapRootElement = ({ element }) => {
+  return (
+    <MaterialUiThemeProvider>
+      <GlobalStyle />
+      <SettingsContextProvider>{element}</SettingsContextProvider>;
+    </MaterialUiThemeProvider>
+  );
+};
