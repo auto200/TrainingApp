@@ -12,51 +12,48 @@ import {
   SettingsContext,
   actionTypes,
 } from "../../../contexts/SettingsContext";
-import { exercisesProfilesManager, utils } from "../../../translations";
+import { exercisesPlansManager, utils } from "../../../translations";
 import uuid from "uuid/v4";
 
 const initialValues = {
-  profileName: "",
+  planName: "",
 };
 
-const AddNewProfile = ({ shown, closeDialog }) => {
+const AddNewPlan = ({ shown, closeDialog }) => {
   const {
-    settings: { currentLanguage, exercisesProfiles },
+    settings: { currentLanguage, exercisesPlans },
     dispatch,
   } = useContext(SettingsContext);
-  const addNewProfile = exercisesProfilesManager.dialogs.addNewProfile;
+  const addNewPlan = exercisesPlansManager.dialogs.addNewPlan;
 
   const validate = values => {
     const errors = {};
-    if (!values.profileName.length) {
-      errors.profileName = addNewProfile.inputErrors.empty[currentLanguage];
-    } else if (
-      Object.keys(exercisesProfiles.profiles).includes(values.profileName)
-    ) {
-      errors.profileName =
-        addNewProfile.inputErrors.alreadyExists[currentLanguage];
+    if (!values.planName.length) {
+      errors.planName = addNewPlan.inputErrors.empty[currentLanguage];
+    } else if (Object.keys(exercisesPlans.plans).includes(values.planName)) {
+      errors.planName = addNewPlan.inputErrors.alreadyExists[currentLanguage];
     }
     return errors;
   };
-  const handleSubmit = ({ profileName }) => {
+  const handleSubmit = ({ planName }) => {
     dispatch({
-      type: actionTypes.CREATE_EXERCISES_PROFILE,
+      type: actionTypes.CREATE_EXERCISES_PLAN,
       payload: {
-        name: profileName,
+        name: planName,
         id: uuid(),
         list: [],
       },
     });
     dispatch({
-      type: actionTypes.SET_CURRENT_EXERCISES_PROFILE,
-      payload: profileName,
+      type: actionTypes.SET_CURRENT_EXERCISES_PLAN,
+      payload: planName,
     });
     closeDialog();
   };
 
   return (
     <Dialog open={shown} onClose={closeDialog}>
-      <DialogTitle>{addNewProfile.title[currentLanguage]}</DialogTitle>
+      <DialogTitle>{addNewPlan.title[currentLanguage]}</DialogTitle>
       <DialogContent>
         <Formik
           initialValues={initialValues}
@@ -65,14 +62,14 @@ const AddNewProfile = ({ shown, closeDialog }) => {
         >
           {({ errors }) => {
             return (
-              <Form id="addNewProfileForm">
+              <Form id="addNewPlanForm">
                 <Field
-                  label={addNewProfile.inputLabel[currentLanguage]}
-                  name="profileName"
+                  label={addNewPlan.inputLabel[currentLanguage]}
+                  name="planName"
                   variant="outlined"
-                  placeholder={addNewProfile.inputPlaceholder[currentLanguage]}
-                  error={!!errors.profileName}
-                  helperText={errors.profileName}
+                  placeholder={addNewPlan.inputPlaceholder[currentLanguage]}
+                  error={!!errors.planName}
+                  helperText={errors.planName}
                   autoFocus
                   as={TextField}
                   autoComplete="off"
@@ -85,7 +82,7 @@ const AddNewProfile = ({ shown, closeDialog }) => {
       <DialogActions>
         <Button onClick={closeDialog}>{utils.cancel[currentLanguage]}</Button>
 
-        <Button type="submit" form="addNewProfileForm" color="secondary">
+        <Button type="submit" form="addNewPlanForm" color="secondary">
           {utils.add[currentLanguage]}
         </Button>
       </DialogActions>
@@ -93,4 +90,4 @@ const AddNewProfile = ({ shown, closeDialog }) => {
   );
 };
 
-export default AddNewProfile;
+export default AddNewPlan;

@@ -11,14 +11,14 @@ import { exercisesList, utils } from "../../translations";
 
 const DeleteExerciseDialog = ({ shown: exerciseId, closeDialog }) => {
   const {
-    settings: { currentLanguage, exercisesProfiles },
+    settings: { currentLanguage, exercisesPlans },
     dispatch,
   } = useContext(SettingsContext);
   const deleteExerciseDialog = exercisesList.dialogs.deleteExercise;
 
   const exercise =
-    exercisesProfiles.current &&
-    exercisesProfiles.profiles[exercisesProfiles.current].list.find(
+    exercisesPlans.current &&
+    exercisesPlans.plans[exercisesPlans.current].list.find(
       ex => ex.id === exerciseId
     );
   const deleteExercise = () => {

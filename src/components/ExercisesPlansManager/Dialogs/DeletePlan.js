@@ -10,29 +10,29 @@ import {
   SettingsContext,
   actionTypes,
 } from "../../../contexts/SettingsContext";
-import { exercisesProfilesManager, utils } from "../../../translations";
+import { exercisesPlansManager, utils } from "../../../translations";
 
-const DeleteProfile = ({ shown, closeDialog }) => {
+const DeletePlan = ({ shown, closeDialog }) => {
   const {
-    settings: { currentLanguage, exercisesProfiles },
+    settings: { currentLanguage, exercisesPlans },
     dispatch,
   } = useContext(SettingsContext);
-  const deleteProfile = exercisesProfilesManager.dialogs.deleteProfile;
+  const deletePlan = exercisesPlansManager.dialogs.deletePlan;
 
   const handleDelete = () => {
     dispatch({
-      type: actionTypes.DELETE_CURRENT_EXERCISES_PROFILE,
+      type: actionTypes.DELETE_CURRENT_EXERCISES_PLAN,
     });
     closeDialog();
   };
 
   return (
     <Dialog open={shown} onClose={closeDialog}>
-      <DialogTitle>{deleteProfile.title[currentLanguage]}</DialogTitle>
+      <DialogTitle>{deletePlan.title[currentLanguage]}</DialogTitle>
       <DialogContent>
-        <div>{deleteProfile.content[currentLanguage]}</div>
+        <div>{deletePlan.content[currentLanguage]}</div>
         <div>
-          <b>{exercisesProfiles.current}</b>
+          <b>{exercisesPlans.current}</b>
         </div>
       </DialogContent>
       <DialogActions>
@@ -45,4 +45,4 @@ const DeleteProfile = ({ shown, closeDialog }) => {
   );
 };
 
-export default DeleteProfile;
+export default DeletePlan;

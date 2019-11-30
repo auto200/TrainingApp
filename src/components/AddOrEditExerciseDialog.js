@@ -28,14 +28,14 @@ const StyledForm = styled(Form)`
 
 const AddOrEditExerciseDialog = ({ shown, config = {}, closeDialog }) => {
   const {
-    settings: { currentLanguage, exercisesProfiles },
+    settings: { currentLanguage, exercisesPlans },
     dispatch,
   } = useContext(SettingsContext);
 
   const exercise =
     (config.type === TYPES.EDIT &&
-      exercisesProfiles.current &&
-      exercisesProfiles.profiles[exercisesProfiles.current].list.find(
+      exercisesPlans.current &&
+      exercisesPlans.plans[exercisesPlans.current].list.find(
         ex => ex.id === config.id
       )) ||
     {};

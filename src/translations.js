@@ -34,44 +34,44 @@ export const overview = {
     pl: "Ustawienia",
   },
 };
-export const exercisesProfilesManager = {
-  title: {
-    noProfileSelected: {
-      en: "No profile selected",
-      pl: "Nie wybrano profilu",
+export const exercisesPlansManager = {
+  selectLabel: {
+    noPlanSelected: {
+      en: "No plan selected",
+      pl: "Nie wybrano planu",
     },
-    currentProfile: {
-      en: "Current profile:",
-      pl: "Wybrany profil:",
+    currentPlan: {
+      en: "Current plan:",
+      pl: "Wybrany plan:",
     },
   },
-  noProfiles: {
-    en: "No profiles",
-    pl: "Brak profili",
-  },
-  addPopover: {
-    en: "Click to add new profile",
-    pl: "Kliknij aby dodać nowy profil",
+  noPlans: {
+    en: "No plans",
+    pl: "Brak planów",
   },
   iconTitles: {
     edit: {
-      en: "Edit profile name",
-      pl: "Edytuj nazwę profilu",
+      en: "Edit plan name",
+      pl: "Edytuj nazwę planu",
     },
     delete: {
-      en: "Delete current profile",
-      pl: "Usuń wybrany profil",
+      en: "Delete current plan",
+      pl: "Usuń wybrany plan",
     },
     add: {
-      en: "Add new profile",
-      pl: "Dodaj nowy profil",
+      en: "Add new plan",
+      pl: "Dodaj nowy plan",
     },
   },
+  addNewPlan: {
+    en: "Add exercise:",
+    pl: "Dodaj ćwiczenie:",
+  },
   dialogs: {
-    addNewProfile: {
+    addNewPlan: {
       title: {
-        en: "Add profile",
-        pl: "Dodaj profil",
+        en: "Add plan",
+        pl: "Dodaj plan",
       },
       inputLabel: {
         en: "Name",
@@ -83,29 +83,29 @@ export const exercisesProfilesManager = {
       },
       inputErrors: {
         empty: {
-          en: "Please, provide profile name",
-          pl: "Proszę, podaj nazwę profilu",
+          en: "Please, provide plan name",
+          pl: "Proszę, podaj nazwę planu",
         },
         alreadyExists: {
-          en: "This profile already exists",
-          pl: "Taki profil już istnieje",
+          en: "This plan already exists",
+          pl: "Taki plan już istnieje",
         },
       },
     },
-    deleteProfile: {
+    deletePlan: {
       title: {
-        en: "Delete profile",
-        pl: "Usuń profil",
+        en: "Delete plan",
+        pl: "Usuń plan",
       },
       content: {
-        en: "Are You sure You want to delete this profile?",
-        pl: "Czy na pewno usunąć ten profil?",
+        en: "Are You sure You want to delete this plan?",
+        pl: "Czy na pewno usunąć ten plan?",
       },
     },
-    editProfileName: {
+    editPlanName: {
       title: {
-        en: "Edit profile name",
-        pl: "Zmień nazwę profilu",
+        en: "Edit plan name",
+        pl: "Zmień nazwę planu",
       },
       inputLabel: {
         en: "New name",
@@ -117,25 +117,25 @@ export const exercisesProfilesManager = {
       },
       inputErrors: {
         empty: {
-          en: "Please, provide profile name",
-          pl: "Proszę, podaj nazwę profilu",
+          en: "Please, provide plan name",
+          pl: "Proszę, podaj nazwę planu",
         },
         alreadyExists: {
-          en: "This profile already exists",
-          pl: "Taki profil już istnieje",
+          en: "This plan already exists",
+          pl: "Taki plan już istnieje",
         },
       },
     },
   },
 };
 export const exercisesList = {
-  noProfile: {
-    en: "^ Create profile ^",
-    pl: "^ Utwórz profil ^",
+  noPlan: {
+    en: "Create training plan",
+    pl: "Utwórz plan treningowy",
   },
   emptyList: {
-    en: "There are no exercises yet. You can add them in the section below!",
-    pl: "Nie masz jeszcze żadnych ćwiczeń. Dodaj je poniżej!",
+    en: "This plan doesn't have any exercises yet. You can add them above!",
+    pl: "Ten plan nie ma jeszcze żadnych ćwiczeń. Możesz je dodać powyżej!",
   },
   tooltips: {
     edit: {
@@ -255,12 +255,13 @@ export const addOrEditExerciseDialog = {
   },
 };
 export const training = {
-  noProfileError: {
+  noPlanError: {
     en: "To start training You need to create plan in the overview section",
     pl: "Aby zacząć trenować musisz stworzyć plan, kieruj się do szatni",
   },
   noExercisesError: {
-    en: "You dont have any exercised added yet. Fix it by going to overview!",
+    en:
+      "You dont have any exercised added yet. Change it by going to overview!",
     pl:
       "Nie masz jeszcze żadnych dodanych ćwiczeń. Zmień to przechodząc do szatni",
   },

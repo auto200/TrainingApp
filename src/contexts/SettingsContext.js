@@ -23,9 +23,9 @@ const initialState = {
     en: "en",
   },
   currentLanguage: getBrowserLanguage(),
-  exercisesProfiles: {
+  exercisesPlans: {
     current: "",
-    profiles: {},
+    plans: {},
   },
 };
 export const actionTypes = {
@@ -36,11 +36,11 @@ export const actionTypes = {
   SET_SPEECH_SYNTH_VOICES: "SET_SPEECH_SYNTH_VOICES",
   SET_SPEECH_SYNTH_SELECTED_VOICE_INDEX:
     "SET_SPEECH_SYNTH_SELECTED_VOICE_INDEX",
-  SET_CURRENT_EXERCISES_PROFILE: "SET_CURRENT_EXERCISES_PROFILE",
-  CREATE_EXERCISES_PROFILE: "CREATE_EXERCISES_PROFILE",
+  SET_CURRENT_EXERCISES_PLAN: "SET_CURRENT_EXERCISES_PLAN",
+  CREATE_EXERCISES_PLAN: "CREATE_EXERCISES_PLAN",
   ADD_EXERCISE: "ADD_EXERCISE",
-  DELETE_CURRENT_EXERCISES_PROFILE: "DELETE_CURRENT_EXERCISES_PROFILE",
-  EDIT_CURRENT_EXERCISES_PROFILE_NAME: "EDIT_CURRENT_EXERCISES_PROFILE_NAME",
+  DELETE_CURRENT_EXERCISES_PLAN: "DELETE_CURRENT_EXERCISES_PLAN",
+  EDIT_CURRENT_EXERCISES_PLAN_NAME: "EDIT_CURRENT_EXERCISES_PLAN_NAME",
   DELETE_EXERCISE: "DELETE_EXERCISE",
   EDIT_EXERCISE: "EDIT_EXERCISE",
 };
@@ -71,14 +71,14 @@ const reducer = (state, action) => {
       newState.speechSynth.selectedVoiceIndex = action.payload;
       return newState;
     }
-    case actionTypes.SET_CURRENT_EXERCISES_PROFILE: {
+    case actionTypes.SET_CURRENT_EXERCISES_PLAN: {
       const newState = { ...state };
-      newState.exercisesProfiles.current = action.payload;
+      newState.exercisesPlans.current = action.payload;
       return newState;
     }
-    case actionTypes.CREATE_EXERCISES_PROFILE: {
+    case actionTypes.CREATE_EXERCISES_PLAN: {
       const newState = { ...state };
-      newState.exercisesProfiles.profiles[action.payload.name] = {
+      newState.exercisesPlans.plans[action.payload.name] = {
         id: action.payload.id,
         list: action.payload.list,
       };
@@ -86,56 +86,54 @@ const reducer = (state, action) => {
     }
     case actionTypes.ADD_EXERCISE: {
       const newState = { ...state };
-      const currentProfile = state.exercisesProfiles.current;
-      newState.exercisesProfiles.profiles[currentProfile].list = [
-        ...newState.exercisesProfiles.profiles[currentProfile].list,
+      const currentPlan = state.exercisesPlans.current;
+      newState.exercisesPlans.plans[currentPlan].list = [
+        ...newState.exercisesPlans.plans[currentPlan].list,
         action.payload,
       ];
       return newState;
     }
-    case actionTypes.DELETE_CURRENT_EXERCISES_PROFILE: {
+    case actionTypes.DELETE_CURRENT_EXERCISES_PLAN: {
       const newState = { ...state };
-      delete newState.exercisesProfiles.profiles[
-        newState.exercisesProfiles.current
-      ];
-      // select any other or no profile as current
-      newState.exercisesProfiles.current =
-        Object.keys(newState.exercisesProfiles.profiles).filter(
-          el => el !== newState.exercisesProfiles.current
+      delete newState.exercisesPlans.plans[newState.exercisesPlans.current];
+      // select any other or no plan as current
+      newState.exercisesPlans.current =
+        Object.keys(newState.exercisesPlans.plans).filter(
+          el => el !== newState.exercisesPlans.current
         )[0] || "";
       return newState;
     }
-    case actionTypes.EDIT_CURRENT_EXERCISES_PROFILE_NAME: {
+    case actionTypes.EDIT_CURRENT_EXERCISES_PLAN_NAME: {
       const newState = { ...state };
-      const current = newState.exercisesProfiles.current;
+      const current = newState.exercisesPlans.current;
       if (current === action.payload) return state;
-      const profiles = newState.exercisesProfiles.profiles;
-      const profile = { ...profiles[current] };
-      delete profiles[current];
-      profiles[action.payload] = profile;
-      newState.exercisesProfiles.current = action.payload;
+      const plans = newState.exercisesPlans.plans;
+      const plan = { ...plans[current] };
+      delete plans[current];
+      plans[action.payload] = plan;
+      newState.exercisesPlans.current = action.payload;
       return newState;
     }
     case actionTypes.DELETE_EXERCISE: {
       const newState = { ...state };
-      const current = newState.exercisesProfiles.current;
-      newState.exercisesProfiles.profiles[
+      const current = newState.exercisesPlans.current;
+      newState.exercisesPlans.plans[
         current
-      ].list = newState.exercisesProfiles.profiles[current].list.filter(
+      ].list = newState.exercisesPlans.plans[current].list.filter(
         el => el.id !== action.payload
       );
       return newState;
     }
     case actionTypes.EDIT_EXERCISE: {
       const newState = { ...state };
-      const current = newState.exercisesProfiles.current;
-      const exerciseIndex = newState.exercisesProfiles.profiles[
+      const current = newState.exercisesPlans.current;
+      const exerciseIndex = newState.exercisesPlans.plans[
         current
       ].list.findIndex(el => el.id === action.payload.id);
       if (exerciseIndex > -1) {
         const exercise =
-          newState.exercisesProfiles.profiles[current].list[exerciseIndex];
-        newState.exercisesProfiles.profiles[current].list[exerciseIndex] = {
+          newState.exercisesPlans.plans[current].list[exerciseIndex];
+        newState.exercisesPlans.plans[current].list[exerciseIndex] = {
           ...exercise,
           ...action.payload.newValues,
         };

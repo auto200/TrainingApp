@@ -1,17 +1,21 @@
 import React from "react";
 import SEO from "../components/seo";
-import Layout from "../components/layout";
-import MenuContextProvider from "../contexts/MenuContext";
+import { ThemeProvider } from "styled-components";
+import theme from "../utils/theme";
 import Overview from "../components/Overview";
+import BottomMenu from "../components/BottomMenu";
 
 const IndexPage = () => {
   return (
-    <MenuContextProvider>
-      <Layout>
+    <ThemeProvider theme={theme}>
+      {" "}
+      {/* providing theme here because gatsby fails to build when doing it in gatsby-ssr */}
+      <>
         <SEO title="Home" />
         <Overview />
-      </Layout>
-    </MenuContextProvider>
+        <BottomMenu />
+      </>
+    </ThemeProvider>
   );
 };
 

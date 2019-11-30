@@ -15,14 +15,14 @@ import { Formik, useField } from "formik";
 
 const EditExerciseDialog = ({ shown: exerciseId, closeDialog }) => {
   const {
-    settings: { currentLanguage, exercisesProfiles },
+    settings: { currentLanguage, exercisesPlans },
     dispatch,
   } = useContext(SettingsContext);
   const editExerciseDialog = exercisesList.dialogs.editExercise;
 
   const exercise =
-    (exercisesProfiles.current &&
-      exercisesProfiles.profiles[exercisesProfiles.current].list.find(
+    (exercisesPlans.current &&
+      exercisesPlans.plans[exercisesPlans.current].list.find(
         ex => ex.id === exerciseId
       )) ||
     {};

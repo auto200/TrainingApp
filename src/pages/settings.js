@@ -27,7 +27,6 @@ const Header = styled.div`
   align-items: center;
   height: 50px;
   width: 100%;
-  /* z-index: 2; */
   background-color: ${({ theme }) => theme.colors.dark};
   border-bottom: solid 1px ${({ theme }) => theme.colors.white};
 

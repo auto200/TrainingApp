@@ -1,14 +1,14 @@
 import React, { useState, useContext } from "react";
 import SEO from "../components/seo";
-import Layout from "../components/layout";
-import styled from "styled-components";
-import MenuContextProvider from "../contexts/MenuContext";
+import styled, { ThemeProvider } from "styled-components";
+import theme from "../utils/theme";
 import TrainingStarted from "../components/TrainingStarted";
 import { SettingsContext } from "../contexts/SettingsContext";
 import { training } from "../translations";
 import BackgroundImage from "gatsby-background-image";
 import { useStaticQuery, graphql } from "gatsby";
 import { menuHeight } from "../utils/constants";
+import BottomMenu from "../components/BottomMenu";
 
 const StyledWrapper = styled(BackgroundImage)`
   height: calc(100vh - ${menuHeight});
@@ -39,18 +39,17 @@ const TrainingPage = () => {
 
   const [isTraining, setIsTraining] = useState(false);
   const {
-    settings: { currentLanguage, exercisesProfiles },
+    settings: { currentLanguage, exercisesPlans },
   } = useContext(SettingsContext);
-  const profile = exercisesProfiles.current;
-  const exercises =
-    profile && exercisesProfiles.profiles[exercisesProfiles.current].list;
+  const plan = exercisesPlans.current;
+  const exercises = plan && exercisesPlans.plans[exercisesPlans.current].list;
   const startTraining = () => {
     if (exercises.length) setIsTraining(true);
   };
   let InnerComponent = null;
-  if (!profile) {
+  if (!plan) {
     InnerComponent = (
-      <TapToStart>{training.noProfileError[currentLanguage]}</TapToStart>
+      <TapToStart>{training.noPlanError[currentLanguage]}</TapToStart>
     );
   } else if (!exercises.length) {
     InnerComponent = (
@@ -65,8 +64,9 @@ const TrainingPage = () => {
   }
 
   return (
-    <MenuContextProvider>
-      <Layout>
+    <ThemeProvider theme={theme}>
+      {/* providing theme here because gatsby fails to build when doing it in gatsby-ssr */}
+      <>
         <SEO title="Training" />
         <StyledWrapper
           fluid={data.bg.childImageSharp.fluid}
@@ -74,8 +74,9 @@ const TrainingPage = () => {
         >
           {InnerComponent}
         </StyledWrapper>
-      </Layout>
-    </MenuContextProvider>
+        <BottomMenu />
+      </>
+    </ThemeProvider>
   );
 };
 

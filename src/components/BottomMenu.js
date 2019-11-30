@@ -1,13 +1,11 @@
 import React, { useContext } from "react";
-import styled, { ThemeProvider } from "styled-components";
-import theme from "../utils/theme";
-import { MenuContext } from "../contexts/MenuContext";
+import styled from "styled-components";
 import { Link } from "gatsby";
 import { bottomMenu } from "../translations";
 import { SettingsContext } from "../contexts/SettingsContext";
 import { menuHeight } from "../utils/constants";
 
-const BottomMenu = styled.div`
+const StyledContainer = styled.div`
   position: fixed;
   overflow: hidden;
   bottom: 0;
@@ -19,10 +17,6 @@ const BottomMenu = styled.div`
   display: flex;
   /* justify-content: space-around; */
   align-items: center;
-  opacity: ${({ menuShown }) => (menuShown ? 1 : 0)};
-  transform: scaleY(${({ menuShown }) => (menuShown ? 1 : 0)});
-  transform-origin: bottom;
-  transition: opacity 1s ease, transform 0.5s ease;
 `;
 const StyledLink = styled(Link)`
   font-size: 1.5rem;
@@ -39,26 +33,20 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const Layout = ({ children }) => {
-  const { menuShown } = useContext(MenuContext);
+const BottomMenu = () => {
   const {
     settings: { currentLanguage },
   } = useContext(SettingsContext);
   return (
-    <ThemeProvider theme={theme}>
-      <>
-        {children}
-        <BottomMenu menuShown={menuShown}>
-          <StyledLink to="/" activeClassName="page-active">
-            {bottomMenu.overwiew[currentLanguage]}
-          </StyledLink>
-          <StyledLink to="/training" activeClassName="page-active">
-            {bottomMenu.training[currentLanguage]}
-          </StyledLink>
-        </BottomMenu>
-      </>
-    </ThemeProvider>
+    <StyledContainer>
+      <StyledLink to="/" activeClassName="page-active">
+        {bottomMenu.overwiew[currentLanguage]}
+      </StyledLink>
+      <StyledLink to="/training" activeClassName="page-active">
+        {bottomMenu.training[currentLanguage]}
+      </StyledLink>
+    </StyledContainer>
   );
 };
 
-export default Layout;
+export default BottomMenu;

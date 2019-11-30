@@ -28,9 +28,9 @@ const EmptyListWarning = styled.div`
 
 const ExercisesList = ({ openEditExerciseDialog }) => {
   const {
-    settings: { currentLanguage, exercisesProfiles },
+    settings: { currentLanguage, exercisesPlans },
   } = useContext(SettingsContext);
-  const exercises = exercisesProfiles.profiles[exercisesProfiles.current];
+  const exercises = exercisesPlans.plans[exercisesPlans.current];
   const [exerciseToDeleteId, setExerciseToDeleteId] = useState("");
 
   const requestDeleteExercise = id => setExerciseToDeleteId(id);
@@ -39,9 +39,9 @@ const ExercisesList = ({ openEditExerciseDialog }) => {
   return (
     <>
       <ExercisesListWrapper>
-        {!exercisesProfiles.current ? (
+        {!exercisesPlans.current ? (
           <EmptyListWarning>
-            {exercisesList.noProfile[currentLanguage]}
+            {exercisesList.noPlan[currentLanguage]}
           </EmptyListWarning>
         ) : exercises.list.length ? (
           exercises.list.map(exercise => (

@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import { Link } from "gatsby";
-import styled, { ThemeProvider } from "styled-components";
+import styled from "styled-components";
 import theme from "../utils/theme";
-import ExercisesProfilesManager from "./ExercisesProfilesManager/ExercisesProfilesManager";
+import ExercisesPlansManager from "./ExercisesPlansManager/ExercisesPlansManager";
 import { IconButton, Tooltip, Paper } from "@material-ui/core";
 import { Settings as GearIcon, GitHub } from "@material-ui/icons";
 import ExercisesList from "./ExercisesList/ExercisesList";
@@ -46,7 +46,7 @@ const HeaderSection = styled(Paper)`
 
 const Overview = () => {
   const {
-    settings: { currentLanguage, exercisesProfiles },
+    settings: { currentLanguage, exercisesPlans },
   } = useContext(SettingsContext);
   const [
     [addorEditExerciseDialogShown, addOrEditExerciseDialogConfig],
@@ -67,40 +67,36 @@ const Overview = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <>
-        <StyledMotionWrapper animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
-          <GitHubIconContainer
-            href="https://github.com/auto200/TrainingApp"
-            target="_blank"
-          >
-            <IconButton>
-              <GitHub />
-            </IconButton>
-          </GitHubIconContainer>
-          <GearIconContainer to="/settings">
-            <Tooltip title={overview.settingsTooltip[currentLanguage]}>
-              <IconButton>
-                <GearIcon fontSize="large" />
-              </IconButton>
-            </Tooltip>
-          </GearIconContainer>
-          <Title>{overview.title[currentLanguage]}</Title>
-          <HeaderSection>
-            <ExercisesProfilesManager />
-            {exercisesProfiles.current && (
-              <AddExerciseSection openDialog={openAddExerciseDialog} />
-            )}
-            <AddOrEditExerciseDialog
-              shown={addorEditExerciseDialogShown}
-              config={addOrEditExerciseDialogConfig}
-              closeDialog={closeAddOrEditExerciseDialog}
-            />
-          </HeaderSection>
-          <ExercisesList openEditExerciseDialog={openEditExerciseDialog} />
-        </StyledMotionWrapper>
-      </>
-    </ThemeProvider>
+    <StyledMotionWrapper animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
+      <GitHubIconContainer
+        href="https://github.com/auto200/TrainingApp"
+        target="_blank"
+      >
+        <IconButton>
+          <GitHub />
+        </IconButton>
+      </GitHubIconContainer>
+      <GearIconContainer to="/settings">
+        <Tooltip title={overview.settingsTooltip[currentLanguage]}>
+          <IconButton>
+            <GearIcon fontSize="large" />
+          </IconButton>
+        </Tooltip>
+      </GearIconContainer>
+      <Title>{overview.title[currentLanguage]}</Title>
+      <HeaderSection>
+        <ExercisesPlansManager />
+        {exercisesPlans.current && (
+          <AddExerciseSection openDialog={openAddExerciseDialog} />
+        )}
+        <AddOrEditExerciseDialog
+          shown={addorEditExerciseDialogShown}
+          config={addOrEditExerciseDialogConfig}
+          closeDialog={closeAddOrEditExerciseDialog}
+        />
+      </HeaderSection>
+      <ExercisesList openEditExerciseDialog={openEditExerciseDialog} />
+    </StyledMotionWrapper>
   );
 };
 export default Overview;
