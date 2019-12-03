@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import styled from "styled-components";
 import { SettingsContext } from "../../contexts/SettingsContext";
 import { exercisesList } from "../../translations";
@@ -10,14 +10,16 @@ import {
   Edit,
 } from "@material-ui/icons";
 import DeleteExerciseDialog from "./DeleteExerciseDialog";
+import { motion, AnimatePresence } from "framer-motion";
 
-const ExercisesListWrapper = styled(Paper)`
+const ExercisesListWrapper = styled(motion.custom(Paper))`
   height: 40vh;
   width: 100%;
   max-width: 550px;
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow-x: none;
+  overflow-y: auto;
 `;
 const EmptyListWarning = styled.div`
   margin: auto;
@@ -26,35 +28,57 @@ const EmptyListWarning = styled.div`
   padding: 5px;
 `;
 
-const ExercisesList = ({ openEditExerciseDialog }) => {
+const ExercisesList = React.memo(({ openEditExerciseDialog }) => {
   const {
     settings: { currentLanguage, exercisesPlans },
   } = useContext(SettingsContext);
   const exercises = exercisesPlans.plans[exercisesPlans.current];
   const [exerciseToDeleteId, setExerciseToDeleteId] = useState("");
-
-  const requestDeleteExercise = id => setExerciseToDeleteId(id);
-  const closeDeleteExerciseDialog = () => setExerciseToDeleteId("");
-
+  const requestDeleteExercise = useCallback(
+    id => setExerciseToDeleteId(id),
+    []
+  );
+  const closeDeleteExerciseDialog = useCallback(
+    () => setExerciseToDeleteId(""),
+    []
+  );
+  const wrapperVarianst = {
+    start: {
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+    end: {
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
   return (
     <>
-      <ExercisesListWrapper>
+      <ExercisesListWrapper
+        variants={wrapperVarianst}
+        initial="start"
+        animate="end"
+      >
         {!exercisesPlans.current ? (
           <EmptyListWarning>
             {exercisesList.noPlan[currentLanguage]}
           </EmptyListWarning>
         ) : exercises.list.length ? (
-          exercises.list.map(exercise => (
-            <ListItem
-              key={exercise.id}
-              id={exercise.id}
-              name={exercise.name}
-              duration={exercise.duration}
-              rest={exercise.rest}
-              requestDeleteExercise={requestDeleteExercise}
-              openEditExerciseDialog={openEditExerciseDialog}
-            />
-          ))
+          <AnimatePresence>
+            {exercises.list.map(exercise => (
+              <ListItem
+                key={exercise.id}
+                id={exercise.id}
+                name={exercise.name}
+                duration={exercise.duration}
+                rest={exercise.rest}
+                requestDeleteExercise={requestDeleteExercise}
+                openEditExerciseDialog={openEditExerciseDialog}
+              />
+            ))}
+          </AnimatePresence>
         ) : (
           <EmptyListWarning>
             {exercisesList.emptyList[currentLanguage]}
@@ -67,9 +91,9 @@ const ExercisesList = ({ openEditExerciseDialog }) => {
       </ExercisesListWrapper>
     </>
   );
-};
+});
 
-const StyledListItem = styled.div`
+const MotionStyledListItem = styled(motion.div)`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -99,12 +123,26 @@ const ListItem = React.memo(
     const {
       settings: { currentLanguage },
     } = useContext(SettingsContext);
-
     const handleDeleteItem = () => requestDeleteExercise(id);
     const handleEditItem = () => openEditExerciseDialog(id);
 
+    const itemVariants = {
+      start: {
+        x: -50,
+        opacity: 0,
+      },
+      end: {
+        x: 0,
+        opacity: 1,
+      },
+    };
+
     return (
-      <StyledListItem>
+      <MotionStyledListItem
+        variants={itemVariants}
+        transition={{ ease: "easeOut" }}
+        exit={{ opacity: 0, x: "-100%" }}
+      >
         <InfoContainder>
           <Name>{name}:&nbsp;</Name>
           <Tooltip title={exercisesList.tooltips.timings[currentLanguage]}>
@@ -128,7 +166,7 @@ const ListItem = React.memo(
             </IconButton>
           </Tooltip>
         </div>
-      </StyledListItem>
+      </MotionStyledListItem>
     );
   }
 );
