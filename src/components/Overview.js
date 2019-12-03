@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import { Link } from "gatsby";
 import styled from "styled-components";
-import theme from "../utils/theme";
 import ExercisesPlansManager from "./ExercisesPlansManager/ExercisesPlansManager";
 import { IconButton, Tooltip, Paper } from "@material-ui/core";
+import AddExerciseSection from "./AddExerciseSection";
 import { Settings as GearIcon, GitHub } from "@material-ui/icons";
 import ExercisesList from "./ExercisesList/ExercisesList";
 import { overview } from "../translations";
@@ -11,7 +11,6 @@ import { SettingsContext } from "../contexts/SettingsContext";
 import AddOrEditExerciseDialog, {
   TYPES as dialogTypes,
 } from "./AddOrEditExerciseDialog";
-import AddExerciseSection from "./AddExerciseSection";
 import { motion } from "framer-motion";
 
 const StyledMotionWrapper = styled(motion.div)`
@@ -43,7 +42,6 @@ const HeaderSection = styled(Paper)`
   justify-content: space-between;
   align-items: center;
 `;
-
 const Overview = () => {
   const {
     settings: { currentLanguage, exercisesPlans },
@@ -62,9 +60,9 @@ const Overview = () => {
   const openAddExerciseDialog = () => {
     openAddOrEditExerciseDialog(dialogTypes.ADD);
   };
-  const openEditExerciseDialog = id => {
+  const openEditExerciseDialog = useCallback(id => {
     openAddOrEditExerciseDialog(dialogTypes.EDIT, id);
-  };
+  }, []);
 
   return (
     <StyledMotionWrapper animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
