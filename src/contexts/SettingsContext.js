@@ -43,6 +43,7 @@ export const actionTypes = {
   EDIT_CURRENT_EXERCISES_PLAN_NAME: "EDIT_CURRENT_EXERCISES_PLAN_NAME",
   DELETE_EXERCISE: "DELETE_EXERCISE",
   EDIT_EXERCISE: "EDIT_EXERCISE",
+  REORDER_EXERCISES: "REORDER_EXERCISES",
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -138,6 +139,16 @@ const reducer = (state, action) => {
           ...action.payload.newValues,
         };
       }
+      return newState;
+    }
+    case actionTypes.REORDER_EXERCISES: {
+      // refference: https://codesandbox.io/s/vertical-list-txfzj
+      const newState = { ...state };
+      const currentPlan = state.exercisesPlans.current;
+      const { source, destination } = action.payload;
+      const plan = newState.exercisesPlans.plans[currentPlan].list;
+      const [removed] = plan.splice(source, 1);
+      plan.splice(destination, 0, removed);
       return newState;
     }
     default:

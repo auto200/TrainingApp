@@ -94,6 +94,12 @@ const Overview = () => {
         />
       </HeaderSection>
       <ExercisesList openEditExerciseDialog={openEditExerciseDialog} />
+      {exercisesPlans.current &&
+        exercisesPlans.plans[exercisesPlans.current].list.length >= 2 && (
+          <div style={{ textAlign: "right", width: "95%", maxWidth: 550 }}>
+            {overview.reorderHint[currentLanguage]}
+          </div>
+        )}
     </StyledMotionWrapper>
   );
 };
