@@ -33,6 +33,10 @@ export const overview = {
     en: "Settings",
     pl: "Ustawienia",
   },
+  reorderHint: {
+    en: "You can reorder exercises!",
+    pl: "Możesz zmieniać kolejność ćwiczeń!",
+  },
 };
 export const exercisesPlansManager = {
   selectLabel: {
