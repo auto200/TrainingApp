@@ -8,7 +8,7 @@ import useSpeechSyntesis from "../utils/hooks/useSpeechSynthesis";
 import { trainingStarted } from "../translations";
 
 const Background = styled.div`
-  background-color: ${({ theme }) => theme.colors.green};
+  background-color: ${({ theme }) => theme.colors.dark};
   width: 100%;
   height: 100%;
   display: flex;
@@ -20,21 +20,15 @@ const Background = styled.div`
     font-size: 3rem;
   }
 `;
-const Counter = styled.div`
-  @keyframes anim {
-    0% {
-      transform: scale(1);
-    }
-    100% {
-      transform: scale(2);
-    }
-  }
-  animation: ${({ closeToEnd }) => closeToEnd && "anim 2s ease forwards"};
-`;
-const ExerciseName = styled.h1`
+const Title = styled.h1`
   position: absolute;
   top: 10%;
   font-size: 3rem;
+`;
+const ExerciseCounter = styled.div`
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
 `;
 const BGVideo = styled.video`
   width: 100%;
@@ -56,6 +50,7 @@ const TrainingStarted = ({ trainingData }) => {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [state, setState] = useState(STATES.PREPARING);
   const counterRef = useRef(null);
+  const pauseVideoTimestamp = useRef(0);
 
   const currentExercise = trainingData[currentExerciseIndex];
   const [timeToCountdown, setTimeToCountdown] = useState(Date.now() + 3000); // 3 seconds prepare time
@@ -108,11 +103,11 @@ const TrainingStarted = ({ trainingData }) => {
 
   return (
     <Background onClick={togglePause}>
-      <ExerciseName>
+      <Title>
         {state === STATES.PREPARING && trainingStarted.prepare[currentLanguage]}
         {state === STATES.EXERCISING && currentExercise.name}
         {state === STATES.RESTING && trainingStarted.rest[currentLanguage]}
-      </ExerciseName>
+      </Title>
       <Countdown
         ref={counterRef}
         renderer={renderer}
@@ -120,16 +115,39 @@ const TrainingStarted = ({ trainingData }) => {
         onComplete={handleCountdownEnd}
         onStart={handleStart}
         key={"JustTimerCountingDown" + timeToCountdown}
+        pauseVideoTimestamp={pauseVideoTimestamp}
       />
+      <ExerciseCounter>
+        {currentExerciseIndex + 1}/{trainingData.length}
+      </ExerciseCounter>
     </Background>
   );
 };
 
 export default TrainingStarted;
 
-const renderer = ({ seconds, minutes, api: { isPaused, isCompleted } }) => {
+const renderer = ({
+  seconds,
+  minutes,
+  api: { isPaused, isCompleted },
+  props: { pauseVideoTimestamp },
+}) => {
+  const onLoadedMetadata = e => {
+    e.target.currentTime = pauseVideoTimestamp.current;
+  };
+  const onTimeUpdate = e => {
+    pauseVideoTimestamp.current = e.target.currentTime;
+  };
   if (isPaused()) {
-    return <BGVideo src={pauseVid} autoPlay loop />;
+    return (
+      <BGVideo
+        src={pauseVid}
+        autoPlay
+        loop
+        onLoadedMetadata={onLoadedMetadata}
+        onTimeUpdate={onTimeUpdate}
+      />
+    );
   }
   if (isCompleted()) {
     return <BGVideo src={endVid} autoPlay loop />;
@@ -144,3 +162,15 @@ const renderer = ({ seconds, minutes, api: { isPaused, isCompleted } }) => {
     </Counter>
   );
 };
+
+const Counter = styled.div`
+  @keyframes anim {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(2);
+    }
+  }
+  animation: ${({ closeToEnd }) => closeToEnd && "anim 2s ease forwards"};
+`;
