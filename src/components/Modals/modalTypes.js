@@ -1,0 +1,5 @@
+export default {
+  CONFIRM: "CONFIRM",
+  ADD_OR_EDIT: "ADD_OR_EDIT",
+  SINGLE_INPUT: "SINGLE_INPUT",
+};

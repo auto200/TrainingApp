@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import { exercisesList } from "../../translations";
+import { exercisesList, utils } from "../../translations";
 import { IconButton, Tooltip } from "@material-ui/core";
 import { SettingsContext } from "../../contexts/SettingsContext";
+import { ModalContext } from "../../contexts/ModalContext";
 import { Draggable } from "react-beautiful-dnd";
-
+import modalTypes from "../Modals/modalTypes";
+import { actionTypes } from "../../contexts/SettingsContext";
+import { TYPES as innerTypes } from "../Modals/modals/AddOrEditExerciseModal";
 import {
   FitnessCenter,
   Restore,
@@ -46,11 +49,6 @@ const getItemStyle = (isDragging, draggableStyle) => {
   return {
     // refference: https://codesandbox.io/s/vertical-list-txfzj
 
-    // some basic styles to make the items look a bit nicer
-    // userSelect: "none",
-    // padding: grid * 2,
-    // margin: `0 0 ${grid}px 0`,
-
     // change background colour if dragging
     background: isDragging && "#2c3e50",
 
@@ -61,81 +59,104 @@ const getItemStyle = (isDragging, draggableStyle) => {
   };
 };
 
-const ExerciseItem = React.memo(
-  ({
-    id,
-    name,
-    index,
-    duration,
-    requestDeleteExercise,
-    openEditExerciseDialog,
-    rest,
-  }) => {
-    const {
-      settings: { currentLanguage },
-    } = useContext(SettingsContext);
-    const handleDeleteItem = () => requestDeleteExercise(id);
-    const handleEditItem = () => openEditExerciseDialog(id);
+const ExerciseItem = React.memo(({ id, name, index, duration, rest }) => {
+  console.log("rerender");
+  const {
+    settings: { currentLanguage },
+    dispatch,
+  } = useContext(SettingsContext);
+  const { setCurrentModal, closeModal } = useContext(ModalContext);
 
-    const itemVariants = {
-      start: {
-        x: -50,
-        opacity: 0,
+  const DeleteExerciseModalContent = (
+    <>
+      <div>{exercisesList.dialogs.deleteExercise.content[currentLanguage]}</div>{" "}
+      <b>{name}</b>
+    </>
+  );
+  const showDeleteExerciseModal = () => {
+    setCurrentModal({
+      type: modalTypes.CONFIRM,
+      title: exercisesList.dialogs.deleteExercise.title[currentLanguage],
+      content: DeleteExerciseModalContent,
+      closeButtonText: utils.cancel[currentLanguage],
+      onClose: closeModal,
+      confirmButtonText: utils.delete[currentLanguage],
+      onConfirm: () => {
+        dispatch({
+          type: actionTypes.DELETE_EXERCISE,
+          payload: id,
+        });
+        closeModal();
       },
-      end: {
-        x: 0,
-        opacity: 1,
+    });
+  };
+  const showEditExerciseModal = () => {
+    setCurrentModal({
+      type: modalTypes.ADD_OR_EDIT,
+      config: {
+        id,
+        type: innerTypes.EDIT,
       },
-    };
+      onClose: closeModal,
+    });
+  };
 
-    return (
-      <Draggable key={id} draggableId={id} index={index}>
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            style={getItemStyle(
-              snapshot.isDragging,
-              provided.draggableProps.style
-            )}
+  const itemVariants = {
+    start: {
+      x: -50,
+      opacity: 0,
+    },
+    end: {
+      x: 0,
+      opacity: 1,
+    },
+  };
+
+  return (
+    <Draggable key={id} draggableId={id} index={index}>
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          style={getItemStyle(
+            snapshot.isDragging,
+            provided.draggableProps.style
+          )}
+        >
+          <MotionStyledListItem
+            variants={itemVariants}
+            transition={{ ease: "easeOut" }}
+            exit={{ opacity: 0, x: "-100%" }}
           >
-            <MotionStyledListItem
-              variants={itemVariants}
-              transition={{ ease: "easeOut" }}
-              exit={{ opacity: 0, x: "-100%" }}
-            >
-              <InfoContainder>
-                <Name>{name}:&nbsp;</Name>
-                <Tooltip
-                  title={exercisesList.tooltips.timings[currentLanguage]}
-                >
-                  <div style={{ display: "flex" }}>
-                    <FitnessCenter />
-                    {duration}s |&nbsp;
-                    <Restore />
-                    {rest}s
-                  </div>
-                </Tooltip>
-              </InfoContainder>
-              <div style={{ display: "flex" }}>
-                <Tooltip title={exercisesList.tooltips.edit[currentLanguage]}>
-                  <IconButton onClick={handleEditItem}>
-                    <Edit />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={exercisesList.tooltips.delete[currentLanguage]}>
-                  <IconButton onClick={handleDeleteItem}>
-                    <DeleteForever />
-                  </IconButton>
-                </Tooltip>
-              </div>
-            </MotionStyledListItem>
-          </div>
-        )}
-      </Draggable>
-    );
-  }
-);
+            <InfoContainder>
+              <Name>{name}:&nbsp;</Name>
+              <Tooltip title={exercisesList.tooltips.timings[currentLanguage]}>
+                <div style={{ display: "flex" }}>
+                  <FitnessCenter />
+                  {duration}s |&nbsp;
+                  <Restore />
+                  {rest}s
+                </div>
+              </Tooltip>
+            </InfoContainder>
+            <div style={{ display: "flex" }}>
+              <Tooltip title={exercisesList.tooltips.edit[currentLanguage]}>
+                <IconButton onClick={showEditExerciseModal}>
+                  <Edit />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={exercisesList.tooltips.delete[currentLanguage]}>
+                <IconButton onClick={showDeleteExerciseModal}>
+                  <DeleteForever />
+                </IconButton>
+              </Tooltip>
+            </div>
+          </MotionStyledListItem>
+        </div>
+      )}
+    </Draggable>
+  );
+});
 
 export default ExerciseItem;

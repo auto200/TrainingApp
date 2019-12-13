@@ -4,12 +4,16 @@ const SettingsContextProvider = require("./src/contexts/SettingsContext")
   .default;
 const MaterialUiThemeProvider = require("./src/contexts/MaterialUiTheme")
   .default;
+const ModalProvider = require("./src/contexts/ModalContext").default;
 
 exports.wrapRootElement = ({ element }) => {
   return (
     <MaterialUiThemeProvider>
       <GlobalStyle />
-      <SettingsContextProvider>{element}</SettingsContextProvider>;
+      <SettingsContextProvider>
+        <ModalProvider>{element}</ModalProvider>
+      </SettingsContextProvider>
+      ;
     </MaterialUiThemeProvider>
   );
 };

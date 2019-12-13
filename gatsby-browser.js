@@ -2,12 +2,15 @@ import React from "react";
 import SettingsContextProvider from "./src/contexts/SettingsContext";
 import GlobalStyle from "./src/utils/GlobalStyle";
 import MaterialUiThemeProvider from "./src/contexts/MaterialUiTheme";
+import ModalProvider from "./src/contexts/ModalContext";
 
 export const wrapRootElement = ({ element }) => {
   return (
     <MaterialUiThemeProvider>
       <GlobalStyle />
-      <SettingsContextProvider>{element}</SettingsContextProvider>
+      <SettingsContextProvider>
+        <ModalProvider>{element}</ModalProvider>
+      </SettingsContextProvider>
     </MaterialUiThemeProvider>
   );
 };

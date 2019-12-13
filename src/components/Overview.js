@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from "react";
+import React, { useContext } from "react";
 import { Link } from "gatsby";
 import styled from "styled-components";
 import ExercisesPlansManager from "./ExercisesPlansManager/ExercisesPlansManager";
@@ -8,9 +8,6 @@ import { Settings as GearIcon, GitHub } from "@material-ui/icons";
 import ExercisesList from "./ExercisesList/ExercisesList";
 import { overview } from "../translations";
 import { SettingsContext } from "../contexts/SettingsContext";
-import AddOrEditExerciseDialog, {
-  TYPES as dialogTypes,
-} from "./AddOrEditExerciseDialog";
 import { motion } from "framer-motion";
 
 const StyledMotionWrapper = styled(motion.div)`
@@ -46,23 +43,6 @@ const Overview = () => {
   const {
     settings: { currentLanguage, exercisesPlans },
   } = useContext(SettingsContext);
-  const [
-    [addorEditExerciseDialogShown, addOrEditExerciseDialogConfig],
-    setAddExerciseDialogShown,
-  ] = useState([false, {}]);
-
-  const openAddOrEditExerciseDialog = (type, exerciseId) =>
-    setAddExerciseDialogShown([true, { type, id: exerciseId }]);
-
-  const closeAddOrEditExerciseDialog = () =>
-    setAddExerciseDialogShown([false, addOrEditExerciseDialogConfig]); //keeping config prevents text flashing while closing dialog
-
-  const openAddExerciseDialog = () => {
-    openAddOrEditExerciseDialog(dialogTypes.ADD);
-  };
-  const openEditExerciseDialog = useCallback(id => {
-    openAddOrEditExerciseDialog(dialogTypes.EDIT, id);
-  }, []);
 
   return (
     <StyledMotionWrapper animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
@@ -84,16 +64,9 @@ const Overview = () => {
       <Title>{overview.title[currentLanguage]}</Title>
       <HeaderSection>
         <ExercisesPlansManager />
-        {exercisesPlans.current && (
-          <AddExerciseSection openDialog={openAddExerciseDialog} />
-        )}
-        <AddOrEditExerciseDialog
-          shown={addorEditExerciseDialogShown}
-          config={addOrEditExerciseDialogConfig}
-          closeDialog={closeAddOrEditExerciseDialog}
-        />
+        {exercisesPlans.current && <AddExerciseSection />}
       </HeaderSection>
-      <ExercisesList openEditExerciseDialog={openEditExerciseDialog} />
+      <ExercisesList />
       {exercisesPlans.current &&
         exercisesPlans.plans[exercisesPlans.current].list.length >= 2 && (
           <div style={{ textAlign: "right", width: "95%", maxWidth: 550 }}>

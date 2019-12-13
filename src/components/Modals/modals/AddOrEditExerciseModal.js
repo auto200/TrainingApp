@@ -9,8 +9,11 @@ import {
   FormControl,
   TextField,
 } from "@material-ui/core";
-import { SettingsContext, actionTypes } from "../contexts/SettingsContext";
-import { addOrEditExerciseDialog, utils } from "../translations";
+import {
+  SettingsContext,
+  actionTypes,
+} from "../../../contexts/SettingsContext";
+import { addOrEditExerciseDialog, utils } from "../../../translations";
 import { Formik, useField, Form } from "formik";
 import uuid from "uuid/v4";
 import * as yup from "yup";
@@ -25,8 +28,11 @@ const StyledForm = styled(Form)`
   align-items: center;
   justify-content: center;
 `;
-
-const AddOrEditExerciseDialog = ({ shown, config = {}, closeDialog }) => {
+/*
+TODO:
+refactor this shitty ass ugly looking component to be more generic when i feel its worth it
+*/
+const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
   const {
     settings: { currentLanguage, exercisesPlans },
     dispatch,
@@ -88,11 +94,11 @@ const AddOrEditExerciseDialog = ({ shown, config = {}, closeDialog }) => {
         payload: { id: config.id, newValues: values },
       });
     }
-    closeDialog();
+    onClose();
   };
 
   return (
-    <Dialog open={shown} onClose={closeDialog}>
+    <Dialog open={true} onClose={onClose}>
       <DialogTitle>
         {config.type === TYPES.ADD
           ? addOrEditExerciseDialog.title.add[currentLanguage]
@@ -150,7 +156,7 @@ const AddOrEditExerciseDialog = ({ shown, config = {}, closeDialog }) => {
         </Formik>
       </DialogContent>
       <DialogActions>
-        <Button onClick={closeDialog}>{utils.cancel[currentLanguage]}</Button>
+        <Button onClick={onClose}>{utils.cancel[currentLanguage]}</Button>
         <Button type="submit" form="editExerciseForm" color="secondary">
           {config.type === TYPES.ADD
             ? utils.add[currentLanguage]

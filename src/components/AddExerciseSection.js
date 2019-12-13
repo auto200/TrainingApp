@@ -4,7 +4,10 @@ import { Fab } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { exercisesPlansManager } from "../translations";
 import { SettingsContext } from "../contexts/SettingsContext";
+import { ModalContext } from "../contexts/ModalContext";
 import { motion } from "framer-motion";
+import modalTypes from "./Modals/modalTypes";
+import { TYPES as innerTypes } from "./Modals/modals/AddOrEditExerciseModal";
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -15,19 +18,30 @@ const Text = styled.div`
   margin-right: 5px;
 `;
 const MotionFab = motion.custom(Fab);
-const AddExerciseSection = ({ openDialog }) => {
+const AddExerciseSection = () => {
   const {
     settings: { currentLanguage },
   } = useContext(SettingsContext);
+  const { setCurrentModal, closeModal } = useContext(ModalContext);
+
+  const showAddExerciseModal = () => {
+    setCurrentModal({
+      type: modalTypes.ADD_OR_EDIT,
+      config: {
+        type: innerTypes.ADD,
+      },
+      onClose: closeModal,
+    });
+  };
 
   return (
     <StyledWrapper>
       <Text>{exercisesPlansManager.addNewPlan[currentLanguage]}</Text>
       <MotionFab
         color="secondary"
-        onClick={openDialog}
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
+        onClick={showAddExerciseModal}
       >
         <Add />
       </MotionFab>

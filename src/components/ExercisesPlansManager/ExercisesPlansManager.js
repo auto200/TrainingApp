@@ -1,6 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { SettingsContext, actionTypes } from "../../contexts/SettingsContext";
+import { ModalContext } from "../../contexts/ModalContext";
 import {
   Select,
   MenuItem,
@@ -9,10 +10,9 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { Edit, DeleteForever, Add } from "@material-ui/icons";
-import { exercisesPlansManager } from "../../translations";
-import AddNewPlan from "./Dialogs/AddNewPlan";
-import DeletePlan from "./Dialogs/DeletePlan";
-import EditPlanName from "./Dialogs/EditPlanName";
+import { exercisesPlansManager, utils } from "../../translations";
+import modalTypes from "../Modals/modalTypes";
+import uuid from "uuid/v4";
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -34,21 +34,11 @@ const ExercisesPlansManager = () => {
     settings: { exercisesPlans, currentLanguage },
     dispatch,
   } = useContext(SettingsContext);
-  const plansEmpty = !Object.keys(exercisesPlans.plans).length;
+  const { setCurrentModal, closeModal } = useContext(ModalContext);
+  const noPlans = !Object.keys(exercisesPlans.plans).length;
   const EMPTY_PLAN = "EMPTY_PLAN";
-
-  const [addPlanDialogShown, setAddPlanDialogShown] = useState(false);
-  const [deletePlanDialogShown, setDeletePlanDialogShown] = useState(false);
-  const [editPlanNameDialogShown, setEditPlanNameDialogShown] = useState(false);
-
-  const showAddPlanDialog = () => setAddPlanDialogShown(true);
-  const closeAddPlanDialog = () => setAddPlanDialogShown(false);
-
-  const showDeletePlanDialog = () => setDeletePlanDialogShown(true);
-  const closeDeletePlanDialog = () => setDeletePlanDialogShown(false);
-
-  const showEditPlanNameDialog = () => setEditPlanNameDialogShown(true);
-  const closeEditPlanNameDialog = () => setEditPlanNameDialogShown(false);
+  const addNewPlan = exercisesPlansManager.dialogs.addNewPlan;
+  const editPlanName = exercisesPlansManager.dialogs.editPlanName;
 
   const handlePlanChange = e => {
     const value = e.target.value;
@@ -56,6 +46,123 @@ const ExercisesPlansManager = () => {
     dispatch({
       type: actionTypes.SET_CURRENT_EXERCISES_PLAN,
       payload: value,
+    });
+  };
+
+  const showEditPlanModal = () => {
+    setCurrentModal({
+      type: modalTypes.SINGLE_INPUT,
+      title: exercisesPlansManager.dialogs.editPlanName.title[currentLanguage],
+      inputLabel:
+        exercisesPlansManager.dialogs.editPlanName.inputLabel[currentLanguage],
+      inputPlaceholder:
+        exercisesPlansManager.dialogs.editPlanName.inputPlaceholder[
+          currentLanguage
+        ],
+      initialValues: {
+        planName: exercisesPlans.current,
+      },
+      closeButtonText: utils.cancel[currentLanguage],
+      onClose: closeModal,
+      validate: values => {
+        const errors = {};
+        if (!values.planName.length) {
+          errors.planName = editPlanName.inputErrors.empty[currentLanguage];
+        }
+        //check if other plans incudes new name
+        else if (
+          Object.keys(exercisesPlans.plans)
+            .filter(el => el !== exercisesPlans.current)
+            .includes(values.planName)
+        ) {
+          errors.planName =
+            editPlanName.inputErrors.alreadyExists[currentLanguage];
+        }
+        return errors;
+      },
+      confirmButtonText: utils.change[currentLanguage],
+      onConfirm: ({ planName }) => {
+        if (planName === exercisesPlans.current) {
+          closeModal();
+          return;
+        }
+        dispatch({
+          type: actionTypes.EDIT_CURRENT_EXERCISES_PLAN_NAME,
+          payload: planName,
+        });
+        closeModal();
+      },
+    });
+  };
+
+  const showAddPlanModal = () => {
+    setCurrentModal({
+      type: modalTypes.SINGLE_INPUT,
+      title: exercisesPlansManager.dialogs.addNewPlan.title[currentLanguage],
+      inputLabel:
+        exercisesPlansManager.dialogs.addNewPlan.inputLabel[currentLanguage],
+      inputPlaceholder:
+        exercisesPlansManager.dialogs.addNewPlan.inputPlaceholder[
+          currentLanguage
+        ],
+      initialValues: {
+        planName: "",
+      },
+      closeButtonText: utils.cancel[currentLanguage],
+      onClose: closeModal,
+      validate: values => {
+        const errors = {};
+        if (!values.planName.length) {
+          errors.planName = addNewPlan.inputErrors.empty[currentLanguage];
+        } else if (
+          Object.keys(exercisesPlans.plans).includes(values.planName)
+        ) {
+          errors.planName =
+            addNewPlan.inputErrors.alreadyExists[currentLanguage];
+        }
+        return errors;
+      },
+      confirmButtonText: utils.add[currentLanguage],
+      onConfirm: ({ planName }) => {
+        dispatch({
+          type: actionTypes.CREATE_EXERCISES_PLAN,
+          payload: {
+            name: planName,
+            id: uuid(),
+            list: [],
+          },
+        });
+        dispatch({
+          type: actionTypes.SET_CURRENT_EXERCISES_PLAN,
+          payload: planName,
+        });
+        closeModal();
+      },
+    });
+  };
+
+  const DeletePlanModalContent = (
+    <>
+      <div>
+        {exercisesPlansManager.dialogs.deletePlan.content[currentLanguage]}
+      </div>{" "}
+      <b>{exercisesPlans.current}</b>
+    </>
+  );
+  const showDeletePlanModal = () => {
+    setCurrentModal({
+      type: modalTypes.CONFIRM,
+      title: exercisesPlansManager.dialogs.deletePlan.title[currentLanguage],
+      content: DeletePlanModalContent,
+      closeButtonText: utils.cancel[currentLanguage],
+      onClose: closeModal,
+      confirmButtonText: utils.delete[currentLanguage],
+      onConfirm: () => {
+        dispatch({
+          type: actionTypes.DELETE_CURRENT_EXERCISES_PLAN,
+        });
+        closeModal();
+      },
     });
   };
 
@@ -74,7 +181,7 @@ const ExercisesPlansManager = () => {
           style={{ width: "150px" }}
           labelId="selectLabel"
         >
-          {!Object.keys(exercisesPlans.plans).length ? (
+          {noPlans ? (
             <MenuItem value={EMPTY_PLAN}>
               {exercisesPlansManager.noPlans[currentLanguage]}
             </MenuItem>
@@ -91,10 +198,7 @@ const ExercisesPlansManager = () => {
             title={exercisesPlansManager.iconTitles.edit[currentLanguage]}
           >
             <span>
-              <IconButton
-                disabled={plansEmpty}
-                onClick={showEditPlanNameDialog}
-              >
+              <IconButton disabled={noPlans} onClick={showEditPlanModal}>
                 <Edit />
               </IconButton>
             </span>
@@ -103,7 +207,7 @@ const ExercisesPlansManager = () => {
             title={exercisesPlansManager.iconTitles.delete[currentLanguage]}
           >
             <span>
-              <IconButton disabled={plansEmpty} onClick={showDeletePlanDialog}>
+              <IconButton disabled={noPlans} onClick={showDeletePlanModal}>
                 <DeleteForever />
               </IconButton>
             </span>
@@ -111,25 +215,13 @@ const ExercisesPlansManager = () => {
           <Tooltip
             title={exercisesPlansManager.iconTitles.add[currentLanguage]}
           >
-            <IconButton onClick={showAddPlanDialog}>
+            <IconButton onClick={showAddPlanModal}>
               <StyledAddButton
-                shine={plansEmpty ? 1 : 0}
-                fontSize={plansEmpty ? "large" : "default"}
+                shine={noPlans ? 1 : 0}
+                fontSize={noPlans ? "large" : "default"}
               />
             </IconButton>
           </Tooltip>
-          <EditPlanName
-            shown={editPlanNameDialogShown}
-            closeDialog={closeEditPlanNameDialog}
-          />
-          <AddNewPlan
-            shown={addPlanDialogShown}
-            closeDialog={closeAddPlanDialog}
-          />
-          <DeletePlan
-            shown={deletePlanDialogShown}
-            closeDialog={closeDeletePlanDialog}
-          />
         </div>
       </div>
     </StyledWrapper>

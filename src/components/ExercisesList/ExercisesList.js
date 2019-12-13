@@ -1,10 +1,9 @@
-import React, { useContext, useState, useCallback } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { SettingsContext } from "../../contexts/SettingsContext";
 import { exercisesList } from "../../translations";
 import { Paper } from "@material-ui/core";
 import ExerciseItem from "./ExerciseItem";
-import DeleteExerciseDialog from "./DeleteExerciseDialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { actionTypes } from "../../contexts/SettingsContext";
@@ -24,21 +23,12 @@ const EmptyListWarning = styled.div`
   padding: 5px;
 `;
 
-const ExercisesList = React.memo(({ openEditExerciseDialog }) => {
+const ExercisesList = () => {
   const {
     settings: { currentLanguage, exercisesPlans },
     dispatch,
   } = useContext(SettingsContext);
   const exercises = exercisesPlans.plans[exercisesPlans.current];
-  const [exerciseToDeleteId, setExerciseToDeleteId] = useState("");
-  const requestDeleteExercise = useCallback(
-    id => setExerciseToDeleteId(id),
-    []
-  );
-  const closeDeleteExerciseDialog = useCallback(
-    () => setExerciseToDeleteId(""),
-    []
-  );
   const wrapperVarianst = {
     start: {
       transition: {
@@ -71,7 +61,7 @@ const ExercisesList = React.memo(({ openEditExerciseDialog }) => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="exercisesList">
-        {(provided, snapshot) => {
+        {provided => {
           return (
             <div
               ref={provided.innerRef}
@@ -96,8 +86,6 @@ const ExercisesList = React.memo(({ openEditExerciseDialog }) => {
                         name={exercise.name}
                         duration={exercise.duration}
                         rest={exercise.rest}
-                        requestDeleteExercise={requestDeleteExercise}
-                        openEditExerciseDialog={openEditExerciseDialog}
                       />
                     ))}
                     {provided.placeholder}
@@ -107,10 +95,6 @@ const ExercisesList = React.memo(({ openEditExerciseDialog }) => {
                     {exercisesList.emptyList[currentLanguage]}
                   </EmptyListWarning>
                 )}
-                <DeleteExerciseDialog
-                  shown={exerciseToDeleteId}
-                  closeDialog={closeDeleteExerciseDialog}
-                />
               </ExercisesListWrapper>
             </div>
           );
@@ -118,6 +102,6 @@ const ExercisesList = React.memo(({ openEditExerciseDialog }) => {
       </Droppable>
     </DragDropContext>
   );
-});
+};
 
 export default ExercisesList;
