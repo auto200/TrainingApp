@@ -27,7 +27,6 @@ const InfoContainder = styled.div`
   flex-grow: 2;
   display: flex;
   flex-wrap: wrap;
-  word-break: break-all;
 `;
 const Name = styled.div`
   &::first-letter {
@@ -36,6 +35,7 @@ const Name = styled.div`
 `;
 
 const getItemStyle = (isDragging, draggableStyle) => {
+  // refference: https://codesandbox.io/s/vertical-list-txfzj
   const { transform } = draggableStyle;
   let activeTransform = {};
   if (transform) {
@@ -47,8 +47,6 @@ const getItemStyle = (isDragging, draggableStyle) => {
     };
   }
   return {
-    // refference: https://codesandbox.io/s/vertical-list-txfzj
-
     // change background colour if dragging
     background: isDragging && "#2c3e50",
 
