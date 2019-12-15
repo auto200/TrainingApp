@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { SettingsContext } from "../../contexts/SettingsContext";
 import { exercisesList } from "../../translations";
@@ -28,7 +28,17 @@ const ExercisesList = () => {
     settings: { currentLanguage, exercisesPlans },
     dispatch,
   } = useContext(SettingsContext);
+  const listRef = useRef(null);
   const exercises = exercisesPlans.plans[exercisesPlans.current];
+  const previousExercisesCount = useRef(exercises && exercises.list.length);
+  //autoscroll down on new exercise added
+  useEffect(() => {
+    if (!exercises) return;
+    if (previousExercisesCount.current < exercises.list.length) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+    previousExercisesCount.current = exercises.list.length;
+  });
   const wrapperVarianst = {
     start: {
       transition: {
@@ -71,6 +81,7 @@ const ExercisesList = () => {
                 variants={wrapperVarianst}
                 initial="start"
                 animate="end"
+                ref={listRef}
               >
                 {!exercisesPlans.current ? (
                   <EmptyListWarning>
