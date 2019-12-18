@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { ModalContext } from "../../contexts/ModalContext";
+import React from "react";
+import { useModal } from "../../contexts/ModalContext";
 import modalTypes from "./modalTypes";
 import ConfirmModal from "./modals/ConfirmModal";
 import SingleInputModal from "./modals/SingleInputModal";
@@ -12,7 +12,7 @@ const Modals = {
 };
 
 const ModalManager = () => {
-  const { currentModal } = useContext(ModalContext);
+  const { currentModal } = useModal();
 
   if (currentModal.type) {
     const ModalComponent = Modals[currentModal.type];

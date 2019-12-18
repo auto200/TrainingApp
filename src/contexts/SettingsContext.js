@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer } from "react";
+import React, { createContext, useEffect, useReducer, useContext } from "react";
 import useSpeechSyntesis from "../utils/hooks/useSpeechSynthesis";
 
 export const SettingsContext = createContext();
@@ -204,3 +204,5 @@ const SettingsContextProvider = ({ children }) => {
 };
 
 export default SettingsContextProvider;
+
+export const useSettings = () => useContext(SettingsContext);

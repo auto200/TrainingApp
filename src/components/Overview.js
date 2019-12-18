@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "gatsby";
 import styled from "styled-components";
 import ExercisesPlansManager from "./ExercisesPlansManager/ExercisesPlansManager";
@@ -7,7 +7,7 @@ import AddExerciseSection from "./AddExerciseSection";
 import { Settings as GearIcon, GitHub } from "@material-ui/icons";
 import ExercisesList from "./ExercisesList/ExercisesList";
 import { overview } from "../translations";
-import { SettingsContext } from "../contexts/SettingsContext";
+import { useSettings } from "../contexts/SettingsContext";
 import { motion } from "framer-motion";
 
 const StyledMotionWrapper = styled(motion.div)`
@@ -42,7 +42,7 @@ const HeaderSection = styled(Paper)`
 const Overview = () => {
   const {
     settings: { currentLanguage, exercisesPlans },
-  } = useContext(SettingsContext);
+  } = useSettings();
 
   return (
     <StyledMotionWrapper animate={{ opacity: 1 }} initial={{ opacity: 0 }}>

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
 import {
   Dialog,
@@ -9,10 +9,7 @@ import {
   FormControl,
   TextField,
 } from "@material-ui/core";
-import {
-  SettingsContext,
-  actionTypes,
-} from "../../../contexts/SettingsContext";
+import { useSettings, actionTypes } from "../../../contexts/SettingsContext";
 import { addOrEditExerciseDialog, utils } from "../../../translations";
 import { Formik, useField, Form } from "formik";
 import uuid from "uuid/v4";
@@ -36,7 +33,7 @@ const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
   const {
     settings: { currentLanguage, exercisesPlans },
     dispatch,
-  } = useContext(SettingsContext);
+  } = useSettings();
 
   const exercise =
     (config.type === TYPES.EDIT &&

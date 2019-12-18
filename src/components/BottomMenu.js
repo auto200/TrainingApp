@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Link } from "gatsby";
 import { bottomMenu } from "../translations";
-import { SettingsContext } from "../contexts/SettingsContext";
+import { useSettings } from "../contexts/SettingsContext";
 import { menuHeight } from "../utils/constants";
 
 const StyledContainer = styled.div`
@@ -36,7 +36,7 @@ const StyledLink = styled(Link)`
 const BottomMenu = () => {
   const {
     settings: { currentLanguage },
-  } = useContext(SettingsContext);
+  } = useSettings();
   return (
     <StyledContainer>
       <StyledLink to="/" activeClassName="page-active">

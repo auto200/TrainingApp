@@ -1,12 +1,11 @@
-import React, { useContext, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import styled from "styled-components";
-import { SettingsContext } from "../../contexts/SettingsContext";
+import { useSettings, actionTypes } from "../../contexts/SettingsContext";
 import { exercisesList } from "../../translations";
 import { Paper } from "@material-ui/core";
 import ExerciseItem from "./ExerciseItem";
 import { motion, AnimatePresence } from "framer-motion";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { actionTypes } from "../../contexts/SettingsContext";
 
 const ExercisesListWrapper = styled(motion.custom(Paper))`
   height: 40vh;
@@ -27,7 +26,7 @@ const ExercisesList = () => {
   const {
     settings: { currentLanguage, exercisesPlans },
     dispatch,
-  } = useContext(SettingsContext);
+  } = useSettings();
   const listRef = useRef(null);
   const exercises = exercisesPlans.plans[exercisesPlans.current];
   const previousExercisesCount = useRef(exercises && exercises.list.length);

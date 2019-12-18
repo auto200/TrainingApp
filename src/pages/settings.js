@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "gatsby";
 import styled, { ThemeProvider } from "styled-components";
 import theme from "../utils/theme";
-import { SettingsContext, actionTypes } from "../contexts/SettingsContext";
+import { useSettings, actionTypes } from "../contexts/SettingsContext";
 import {
   Switch,
   Paper,
@@ -66,7 +66,7 @@ const StyledSelect = styled(Select)`
 `;
 
 const Settings = () => {
-  const { settings, dispatch } = useContext(SettingsContext);
+  const { settings, dispatch } = useSettings();
   const { speak } = useSpeechSyntesis();
   const toggleVoiceEnabled = () => {
     dispatch({

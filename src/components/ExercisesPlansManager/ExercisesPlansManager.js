@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
-import { SettingsContext, actionTypes } from "../../contexts/SettingsContext";
-import { ModalContext } from "../../contexts/ModalContext";
+import { useSettings, actionTypes } from "../../contexts/SettingsContext";
+import { useModal } from "../../contexts/ModalContext";
 import {
   Select,
   MenuItem,
@@ -33,8 +33,8 @@ const ExercisesPlansManager = () => {
   const {
     settings: { exercisesPlans, currentLanguage },
     dispatch,
-  } = useContext(SettingsContext);
-  const { setCurrentModal, closeModal } = useContext(ModalContext);
+  } = useSettings();
+  const { setCurrentModal, closeModal } = useModal();
   const noPlans = !Object.keys(exercisesPlans.plans).length;
   const EMPTY_PLAN = "EMPTY_PLAN";
   const addNewPlan = exercisesPlansManager.dialogs.addNewPlan;

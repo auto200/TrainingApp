@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import CountDownTimer from "../utils/CountDownTimer";
 import pauseVid from "../assets/pauseVid.mp4";
 import endVid from "../assets/endVid.mp4";
-import { SettingsContext } from "../contexts/SettingsContext";
+import { useSettings } from "../contexts/SettingsContext";
 import useSpeechSyntesis from "../utils/hooks/useSpeechSynthesis";
 
 const Background = styled.div`
@@ -39,7 +39,7 @@ const ExerciseName = styled.h1`
 const TrainingStarted = ({ trainingData }) => {
   const {
     settings: { speechSynth },
-  } = useContext(SettingsContext);
+  } = useSettings();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isResting, setIsResting] = useState(false);

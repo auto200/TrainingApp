@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import SEO from "../components/seo";
 import styled, { ThemeProvider } from "styled-components";
 import theme from "../utils/theme";
 import TrainingStarted from "../components/TrainingStarted";
-import { SettingsContext } from "../contexts/SettingsContext";
+import { useSettings } from "../contexts/SettingsContext";
 import { training } from "../translations";
 import BackgroundImage from "gatsby-background-image";
 import { useStaticQuery, graphql } from "gatsby";
@@ -40,7 +40,7 @@ const TrainingPage = () => {
   const [isTraining, setIsTraining] = useState(false);
   const {
     settings: { currentLanguage, exercisesPlans },
-  } = useContext(SettingsContext);
+  } = useSettings();
   const plan = exercisesPlans.current;
   const exercises = plan && exercisesPlans.plans[exercisesPlans.current].list;
   const startTraining = () => {

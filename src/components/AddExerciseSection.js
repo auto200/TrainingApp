@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Fab } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { exercisesPlansManager } from "../translations";
-import { SettingsContext } from "../contexts/SettingsContext";
-import { ModalContext } from "../contexts/ModalContext";
+import { useSettings } from "../contexts/SettingsContext";
+import { useModal } from "../contexts/ModalContext";
 import { motion } from "framer-motion";
 import modalTypes from "./Modals/modalTypes";
 import { TYPES as innerTypes } from "./Modals/modals/AddOrEditExerciseModal";
@@ -21,8 +21,8 @@ const MotionFab = motion.custom(Fab);
 const AddExerciseSection = () => {
   const {
     settings: { currentLanguage },
-  } = useContext(SettingsContext);
-  const { setCurrentModal, closeModal } = useContext(ModalContext);
+  } = useSettings();
+  const { setCurrentModal, closeModal } = useModal();
 
   const showAddExerciseModal = () => {
     setCurrentModal({

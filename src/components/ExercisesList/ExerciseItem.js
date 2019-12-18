@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { exercisesList, utils } from "../../translations";
 import { IconButton, Tooltip } from "@material-ui/core";
-import { SettingsContext } from "../../contexts/SettingsContext";
-import { ModalContext } from "../../contexts/ModalContext";
+import { useSettings } from "../../contexts/SettingsContext";
+import { useModal } from "../../contexts/ModalContext";
 import { Draggable } from "react-beautiful-dnd";
 import modalTypes from "../Modals/modalTypes";
 import { actionTypes } from "../../contexts/SettingsContext";
@@ -63,8 +63,8 @@ const ExerciseItem = React.memo(({ id, name, index, duration, rest }) => {
   const {
     settings: { currentLanguage },
     dispatch,
-  } = useContext(SettingsContext);
-  const { setCurrentModal, closeModal } = useContext(ModalContext);
+  } = useSettings();
+  const { setCurrentModal, closeModal } = useModal();
 
   const DeleteExerciseModalContent = (
     <>

@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import Countdown, { zeroPad } from "react-countdown-now";
 import pauseVid from "../assets/pauseVid.mp4";
 import endVid from "../assets/endVid.mp4";
-import { SettingsContext } from "../contexts/SettingsContext";
+import { useSettings } from "../contexts/SettingsContext";
 import useSpeechSyntesis from "../utils/hooks/useSpeechSynthesis";
 import { trainingStarted } from "../translations";
 
@@ -45,7 +45,7 @@ const STATES = {
 const TrainingStarted = ({ trainingData }) => {
   const {
     settings: { speechSynth, currentLanguage },
-  } = useContext(SettingsContext);
+  } = useSettings();
   const { speak } = useSpeechSyntesis();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [state, setState] = useState(STATES.PREPARING);
