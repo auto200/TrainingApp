@@ -49,6 +49,7 @@ const getItemStyle = (isDragging, draggableStyle) => {
   return {
     // change background colour if dragging
     background: isDragging && "#2c3e50",
+    borderRadius: isDragging && "5px",
 
     // styles we need to apply on draggables
 
@@ -109,6 +110,11 @@ const ExerciseItem = React.memo(({ id, name, index, duration, rest }) => {
       opacity: 1,
     },
   };
+  const layoutTransition = {
+    type: "spring",
+    stiffness: 200,
+    damping: 20,
+  };
 
   return (
     <Draggable key={id} draggableId={id} index={index}>
@@ -126,6 +132,8 @@ const ExerciseItem = React.memo(({ id, name, index, duration, rest }) => {
             variants={itemVariants}
             transition={{ ease: "easeOut" }}
             exit={{ opacity: 0, x: "-100%" }}
+            // smooth transisition when removing item.
+            layoutTransition={snapshot.isDragging ? null : layoutTransition}
           >
             <InfoContainder>
               <Name>{name}:&nbsp;</Name>
