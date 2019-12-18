@@ -13,7 +13,7 @@ const ExercisesListWrapper = styled(motion.custom(Paper))`
   width: 100%;
   display: flex;
   flex-direction: column;
-  overflow-x: none;
+  overflow-x: hidden;
   overflow-y: auto;
 `;
 const EmptyListWarning = styled.div`
@@ -58,6 +58,9 @@ const ExercisesList = () => {
     if (!destination) {
       return;
     }
+    //nothing changed
+    if (source.index === destination.index) return;
+
     if (source.droppableId === destination.droppableId) {
       dispatch({
         type: actionTypes.REORDER_EXERCISES,
