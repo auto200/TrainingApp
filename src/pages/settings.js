@@ -92,6 +92,9 @@ const Settings = () => {
     });
   };
 
+  {
+    /* providing theme on each page because for some reason gatsby fails to build when doing it in gatsby-ssr */
+  }
   return (
     <ThemeProvider theme={theme}>
       <>
