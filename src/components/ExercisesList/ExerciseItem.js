@@ -49,7 +49,7 @@ const getItemStyle = (isDragging, draggableStyle) => {
   return {
     // change background colour if dragging
     background: isDragging && "#2c3e50",
-    borderRadius: isDragging && "5px",
+    borderRadius: isDragging && "15px",
 
     // styles we need to apply on draggables
 
@@ -137,14 +137,12 @@ const ExerciseItem = React.memo(({ id, name, index, duration, rest }) => {
           >
             <InfoContainder>
               <Name>{name}:&nbsp;</Name>
-              <Tooltip title={exercisesList.tooltips.timings[currentLanguage]}>
-                <div style={{ display: "flex" }}>
-                  <FitnessCenter />
-                  {duration}s |&nbsp;
-                  <Restore />
-                  {rest}s
-                </div>
-              </Tooltip>
+              <div style={{ display: "flex" }}>
+                <FitnessCenter />
+                {duration}s |&nbsp;
+                <Restore />
+                {rest}s
+              </div>
             </InfoContainder>
             <div style={{ display: "flex" }}>
               <Tooltip title={exercisesList.tooltips.edit[currentLanguage]}>
