@@ -8,9 +8,8 @@ import { Settings as GearIcon, GitHub } from "@material-ui/icons";
 import ExercisesList from "./ExercisesList/ExercisesList";
 import { overview } from "../translations";
 import { useSettings } from "../contexts/SettingsContext";
-import { motion } from "framer-motion";
 
-const StyledMotionWrapper = styled(motion.div)`
+const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -45,7 +44,7 @@ const Overview = () => {
   } = useSettings();
 
   return (
-    <StyledMotionWrapper animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
+    <StyledWrapper>
       <GitHubIconContainer
         href="https://github.com/auto200/TrainingApp"
         target="_blank"
@@ -73,7 +72,7 @@ const Overview = () => {
             {overview.reorderHint[currentLanguage]}
           </div>
         )}
-    </StyledMotionWrapper>
+    </StyledWrapper>
   );
 };
 export default Overview;
