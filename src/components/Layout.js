@@ -50,6 +50,7 @@ const Layout = ({ children, location }) => {
             animate="center1"
             exit={{ opacity: 0 }}
             transition={{ easings: "linear" }}
+            style={{ overflowX: "hidden" }}
           >
             {children}
           </motion.main>
