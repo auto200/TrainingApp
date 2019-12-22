@@ -7,7 +7,6 @@ import { menuHeight } from "../utils/constants";
 
 const StyledContainer = styled.div`
   position: fixed;
-  overflow: hidden;
   bottom: 0;
   left: 0;
   height: ${menuHeight};
