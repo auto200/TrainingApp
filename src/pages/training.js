@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import SEO from "../components/seo";
-import styled, { ThemeProvider } from "styled-components";
-import theme from "../utils/theme";
+import styled from "styled-components";
 import TrainingStarted from "../components/TrainingStarted";
 import { useSettings } from "../contexts/SettingsContext";
 import { training } from "../translations";
 import BackgroundImage from "gatsby-background-image";
 import { useStaticQuery, graphql } from "gatsby";
 import { menuHeight } from "../utils/constants";
-import BottomMenu from "../components/BottomMenu";
 
 const StyledWrapper = styled(BackgroundImage)`
   height: calc(100vh - ${menuHeight});
@@ -63,22 +61,16 @@ const TrainingPage = () => {
     InnerComponent = <TrainingStarted trainingData={exercises} />;
   }
 
-  {
-    /* providing theme on each page because for some reason gatsby fails to build when doing it in gatsby-ssr */
-  }
   return (
-    <ThemeProvider theme={theme}>
-      <>
-        <SEO title="Training" />
-        <StyledWrapper
-          fluid={data.bg.childImageSharp.fluid}
-          onClick={startTraining}
-        >
-          {InnerComponent}
-        </StyledWrapper>
-        <BottomMenu />
-      </>
-    </ThemeProvider>
+    <>
+      <SEO title="Training" />
+      <StyledWrapper
+        fluid={data.bg.childImageSharp.fluid}
+        onClick={startTraining}
+      >
+        {InnerComponent}
+      </StyledWrapper>
+    </>
   );
 };
 

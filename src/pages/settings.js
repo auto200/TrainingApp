@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "gatsby";
-import styled, { ThemeProvider } from "styled-components";
-import theme from "../utils/theme";
+import styled from "styled-components";
 import { useSettings, actionTypes } from "../contexts/SettingsContext";
 import {
   Switch,
@@ -14,9 +13,8 @@ import {
 import { ArrowBack } from "@material-ui/icons";
 import useSpeechSyntesis from "../utils/hooks/useSpeechSynthesis";
 import { settings as settingsTransl, voicePreview } from "../translations";
-import { motion } from "framer-motion";
 
-const StyledMotionWrapper = styled(motion.div)`
+const StyledWrapper = styled.div`
   width: 100%;
   margin-top: 50px;
 `;
@@ -92,75 +90,68 @@ const Settings = () => {
     });
   };
 
-  {
-    /* providing theme on each page because for some reason gatsby fails to build when doing it in gatsby-ssr */
-  }
   return (
-    <ThemeProvider theme={theme}>
-      <>
-        <StyledMotionWrapper initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <Header>
-            <BackButtonContainer to="/">
-              <IconButton aria-label="back to overview">
-                <BackButton fontSize="large" />
-              </IconButton>
-            </BackButtonContainer>
-            <span>{settingsTransl.title[settings.currentLanguage]}</span>
-          </Header>
-          <SettingsContainer>
+    <StyledWrapper>
+      <Header>
+        <BackButtonContainer to="/">
+          <IconButton aria-label="back to overview">
+            <BackButton fontSize="large" />
+          </IconButton>
+        </BackButtonContainer>
+        <span>{settingsTransl.title[settings.currentLanguage]}</span>
+      </Header>
+      <SettingsContainer>
+        <Row>
+          <SettingName>
+            {settingsTransl.language[settings.currentLanguage]}
+          </SettingName>
+          <StyledSelect
+            value={settings.currentLanguage}
+            onChange={handleLanguageChange}
+          >
+            <MenuItem value={settings.languages.en}>English</MenuItem>
+            <MenuItem value={settings.languages.pl}>Polski</MenuItem>
+          </StyledSelect>
+        </Row>
+        <Row>
+          <SettingName>
+            {settingsTransl.voiceSynth[settings.currentLanguage]}
+          </SettingName>
+          <Tooltip
+            open={!settings.speechSynth.supported}
+            title={settingsTransl.notSupported[settings.currentLanguage]}
+            placement="left-end"
+          >
+            <Switch
+              checked={settings.speechSynth.enabled}
+              onChange={toggleVoiceEnabled}
+              disabled={
+                !settings.speechSynth.supported ||
+                !settings.speechSynth.voices.length
+              }
+            />
+          </Tooltip>
+        </Row>
+        {settings.speechSynth.enabled &&
+          settings.speechSynth.voices.length > 0 && (
             <Row>
               <SettingName>
-                {settingsTransl.language[settings.currentLanguage]}
+                {settingsTransl.languageOfSpeech[settings.currentLanguage]}
               </SettingName>
               <StyledSelect
-                value={settings.currentLanguage}
-                onChange={handleLanguageChange}
+                value={settings.speechSynth.selectedVoiceIndex}
+                onChange={handleVoiceChange}
               >
-                <MenuItem value={settings.languages.en}>English</MenuItem>
-                <MenuItem value={settings.languages.pl}>Polski</MenuItem>
+                {settings.speechSynth.voices.map((voice, index) => (
+                  <MenuItem key={voice.voiceURI} value={index}>
+                    {voice.name}
+                  </MenuItem>
+                ))}
               </StyledSelect>
             </Row>
-            <Row>
-              <SettingName>
-                {settingsTransl.voiceSynth[settings.currentLanguage]}
-              </SettingName>
-              <Tooltip
-                open={!settings.speechSynth.supported}
-                title={settingsTransl.notSupported[settings.currentLanguage]}
-                placement="left-end"
-              >
-                <Switch
-                  checked={settings.speechSynth.enabled}
-                  onChange={toggleVoiceEnabled}
-                  disabled={
-                    !settings.speechSynth.supported ||
-                    !settings.speechSynth.voices.length
-                  }
-                />
-              </Tooltip>
-            </Row>
-            {settings.speechSynth.enabled &&
-              settings.speechSynth.voices.length > 0 && (
-                <Row>
-                  <SettingName>
-                    {settingsTransl.languageOfSpeech[settings.currentLanguage]}
-                  </SettingName>
-                  <StyledSelect
-                    value={settings.speechSynth.selectedVoiceIndex}
-                    onChange={handleVoiceChange}
-                  >
-                    {settings.speechSynth.voices.map((voice, index) => (
-                      <MenuItem key={voice.voiceURI} value={index}>
-                        {voice.name}
-                      </MenuItem>
-                    ))}
-                  </StyledSelect>
-                </Row>
-              )}
-          </SettingsContainer>
-        </StyledMotionWrapper>
-      </>
-    </ThemeProvider>
+          )}
+      </SettingsContainer>
+    </StyledWrapper>
   );
 };
 
