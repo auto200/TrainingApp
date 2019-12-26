@@ -12,7 +12,6 @@ const Layout = ({ children, location }) => {
   useEffect(() => {
     previousLocation.current = pathname;
   }, [pathname]);
-  console.log("prev path:", previousLocation.current);
 
   const variants = {
     left: {
@@ -32,6 +31,7 @@ const Layout = ({ children, location }) => {
       opacity: 1,
     },
   };
+  // page transitions here
   let initial = null;
   if (!previousLocation.current) initial = "center0";
   else if (pathname === "/") initial = "left";
@@ -50,7 +50,7 @@ const Layout = ({ children, location }) => {
             animate="center1"
             exit={{ opacity: 0 }}
             transition={{ easings: "linear" }}
-            style={{ overflowX: "hidden" }}
+            style={{ overflowX: "hidden" }} // this fixes top menu overflowing on settings page
           >
             {children}
           </motion.main>
