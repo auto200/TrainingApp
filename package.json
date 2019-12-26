@@ -1,24 +1,24 @@
 {
-  "name": "gatsby-starter-default",
-  "private": true,
-  "description": "A simple starter to get up and developing quickly with Gatsby",
+  "name": "training-app",
+  "private": false,
+  "description": "Just a training app to train",
   "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "author": "auto200",
   "dependencies": {
-    "@material-ui/core": "^4.8.0",
+    "@material-ui/core": "^4.8.1",
     "@material-ui/icons": "^4.5.1",
     "babel-plugin-styled-components": "^1.10.6",
     "formik": "^2.0.8",
     "framer-motion": "^1.7.0",
-    "gatsby": "^2.18.12",
+    "gatsby": "^2.18.17",
     "gatsby-background-image": "^0.9.12",
-    "gatsby-image": "^2.2.36",
-    "gatsby-plugin-manifest": "^2.2.33",
-    "gatsby-plugin-offline": "^3.0.29",
+    "gatsby-image": "^2.2.37",
+    "gatsby-plugin-manifest": "^2.2.34",
+    "gatsby-plugin-offline": "^3.0.30",
     "gatsby-plugin-react-helmet": "^3.1.18",
-    "gatsby-plugin-sharp": "^2.3.8",
+    "gatsby-plugin-sharp": "^2.3.10",
     "gatsby-plugin-styled-components": "^3.1.16",
-    "gatsby-source-filesystem": "^2.1.42",
+    "gatsby-source-filesystem": "^2.1.43",
     "gatsby-transformer-sharp": "^2.3.9",
     "intersection-observer": "^0.7.0",
     "prop-types": "^15.7.2",
@@ -35,7 +35,7 @@
     "prettier": "^1.19.1"
   },
   "keywords": [
-    "gatsby"
+    "training-app"
   ],
   "license": "MIT",
   "scripts": {
@@ -48,9 +48,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+    "url": "https://github.com/auto200"
   },
   "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "url": "https://github.com/auto200"
   }
 }
