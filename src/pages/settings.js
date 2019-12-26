@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "gatsby";
 import styled from "styled-components";
+import SEO from "../components/Seo";
 import { useSettings, actionTypes } from "../contexts/SettingsContext";
 import {
   Switch,
@@ -92,6 +93,7 @@ const Settings = () => {
 
   return (
     <StyledWrapper>
+      <SEO title="Settings" />
       <Header>
         <BackButtonContainer to="/">
           <IconButton aria-label="back to overview">

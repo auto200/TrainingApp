@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SEO from "../components/seo";
+import SEO from "../components/Seo";
 import styled from "styled-components";
 import TrainingStarted from "../components/TrainingStarted";
 import { useSettings } from "../contexts/SettingsContext";
