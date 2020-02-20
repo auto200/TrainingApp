@@ -1,10 +1,9 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "gatsby";
 import { bottomMenu } from "../translations";
 import { useSettings } from "../contexts/SettingsContext";
 import { menuHeight } from "../utils/constants";
-import menu_hover from "../assets/menu_hover.mp3";
 import menu_select from "../assets/menu_select.mp3";
 
 const StyledContainer = styled.div`
@@ -39,7 +38,11 @@ const BottomMenu = () => {
     settings: { currentLanguage },
   } = useSettings();
 
-  const audioRef = useRef(new Audio(menu_select));
+  const audioRef = useRef();
+
+  useEffect(() => {
+    audioRef.current = new Audio(menu_select);
+  }, []);
   return (
     <StyledContainer>
       <StyledLink
