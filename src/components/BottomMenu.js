@@ -1,10 +1,11 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Link } from "gatsby";
 import { bottomMenu } from "../translations";
 import { useSettings } from "../contexts/SettingsContext";
 import { menuHeight } from "../utils/constants";
 import menu_select from "../assets/menu_select.mp3";
+import audioManager from "../utils/audioManager";
 
 const StyledContainer = styled.div`
   position: fixed;
@@ -38,18 +39,13 @@ const BottomMenu = () => {
     settings: { currentLanguage },
   } = useSettings();
 
-  const audioRef = useRef();
-
-  useEffect(() => {
-    audioRef.current = new Audio(menu_select);
-  }, []);
   return (
     <StyledContainer>
       <StyledLink
         to="/"
         activeClassName="page-active"
         onClick={() => {
-          audioRef.current.play();
+          audioManager.play(menu_select);
         }}
       >
         {bottomMenu.overwiew[currentLanguage]}
@@ -58,7 +54,7 @@ const BottomMenu = () => {
         to="/training"
         activeClassName="page-active"
         onClick={() => {
-          audioRef.current.play();
+          audioManager.play(menu_select);
         }}
       >
         {bottomMenu.training[currentLanguage]}
