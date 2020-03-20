@@ -6,6 +6,8 @@ import endVid from "../assets/endVid.mp4";
 import { useSettings } from "../contexts/SettingsContext";
 import useSpeechSyntesis from "../utils/hooks/useSpeechSynthesis";
 import { trainingStarted } from "../translations";
+import menu_sound from "../assets/menu_select.mp3";
+import audioManager from "../utils/audioManager";
 
 const Background = styled.div`
   background-color: ${({ theme }) => theme.colors.dark};
@@ -51,6 +53,7 @@ const TrainingStarted = ({ trainingData }) => {
   const [state, setState] = useState(STATES.PREPARING);
   const counterRef = useRef(null);
   const pauseVideoTimestamp = useRef(0);
+  const soundBeepsCounter = useRef(3);
 
   const currentExercise = trainingData[currentExerciseIndex];
   const [timeToCountdown, setTimeToCountdown] = useState(Date.now() + 3000); // 3 seconds prepare time
@@ -76,6 +79,7 @@ const TrainingStarted = ({ trainingData }) => {
   };
 
   const handleCountdownEnd = () => {
+    soundBeepsCounter.current = 3;
     switch (state) {
       case STATES.PREPARING: {
         setState(STATES.EXERCISING);
@@ -116,6 +120,8 @@ const TrainingStarted = ({ trainingData }) => {
         onStart={handleStart}
         key={"JustTimerCountingDown" + timeToCountdown}
         pauseVideoTimestamp={pauseVideoTimestamp}
+        playAudio={audioManager.play}
+        soundBeepsCounter={soundBeepsCounter}
       />
       <ExerciseCounter>
         {currentExerciseIndex + 1}/{trainingData.length}
@@ -130,8 +136,14 @@ const renderer = ({
   seconds,
   minutes,
   api: { isPaused, isCompleted },
-  props: { pauseVideoTimestamp },
+  props: { pauseVideoTimestamp, playAudio, soundBeepsCounter },
 }) => {
+  console.log(soundBeepsCounter.current);
+  const closeToEnd = !minutes && seconds <= 3;
+  if (closeToEnd && soundBeepsCounter.current) {
+    playAudio(menu_sound);
+    soundBeepsCounter.current--;
+  }
   const onLoadedMetadata = e => {
     e.target.currentTime = pauseVideoTimestamp.current;
   };
@@ -152,7 +164,7 @@ const renderer = ({
   if (isCompleted()) {
     return <BGVideo src={endVid} autoPlay loop />;
   }
-  const closeToEnd = !minutes && seconds <= 3;
+
   return (
     <Counter
       closeToEnd={closeToEnd}
