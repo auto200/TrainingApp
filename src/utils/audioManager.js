@@ -1,6 +1,6 @@
 class AudioManager {
   constructor() {
-    this.audio = typeof window !== "undefined" ? new Audio() : {};
+    this.audio = typeof window !== "undefined" && new Audio();
   }
   play = source => {
     try {
