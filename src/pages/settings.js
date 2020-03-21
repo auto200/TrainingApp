@@ -73,6 +73,12 @@ const Settings = () => {
     });
   };
 
+  const toggleVibrations = () => {
+    dispatch({
+      type: actionTypes.TOGGLE_VIBRATIONS,
+    });
+  };
+
   const handleLanguageChange = e => {
     dispatch({
       type: actionTypes.SET_CURRENT_LANGUAGE,
@@ -152,6 +158,26 @@ const Settings = () => {
               </StyledSelect>
             </Row>
           )}
+        <Row>
+          <SettingName>
+            {settingsTransl.vibrations.title[settings.currentLanguage]}
+          </SettingName>
+          <Tooltip
+            open={!settings.vibrations}
+            title={settingsTransl.vibrations.tooltip[settings.currentLanguage]}
+            placement="left-end"
+            style={{ zIndex: 100 }}
+          >
+            <Switch
+              checked={settings.vibrations}
+              onChange={toggleVibrations}
+              disabled={
+                typeof window !== "undefined" &&
+                !window.navigator && !window.navigator.vibrate
+              }
+            />
+          </Tooltip>
+        </Row>
       </SettingsContainer>
     </StyledWrapper>
   );

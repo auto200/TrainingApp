@@ -315,6 +315,16 @@ export const settings = {
     en: "Language of speech:",
     pl: "Język mowy:",
   },
+  vibrations: {
+    title: {
+      en: "Vibrations",
+      pl: "Vibracje",
+    },
+    tooltip: {
+      en: "Vibrate on start/end exercise",
+      pl: "Vibruj przy początku/końcu ćwiczenia",
+    },
+  },
 };
 export const voicePreview = {
   en: "I will be telling you the exercise name",

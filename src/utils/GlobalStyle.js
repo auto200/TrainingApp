@@ -14,6 +14,10 @@ const GlobalStyle = createGlobalStyle`
   *,*::before,*::after{
     box-sizing: border-box;
   }
+  /* fix for tooltip overflowing select list */
+  div.MuiTooltip-popper{
+    z-index:150;
+  }
 `;
 
 export default GlobalStyle;

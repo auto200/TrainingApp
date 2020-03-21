@@ -27,6 +27,7 @@ const initialState = {
     current: "",
     plans: {},
   },
+  vibrations: true,
 };
 export const actionTypes = {
   SET_SETTINGS: "SET_SETTINGS",
@@ -44,6 +45,7 @@ export const actionTypes = {
   DELETE_EXERCISE: "DELETE_EXERCISE",
   EDIT_EXERCISE: "EDIT_EXERCISE",
   REORDER_EXERCISES: "REORDER_EXERCISES",
+  TOGGLE_VIBRATIONS: "TOGGLE_VIBRATIONS",
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -150,6 +152,9 @@ const reducer = (state, action) => {
       const [removed] = plan.splice(source, 1);
       plan.splice(destination, 0, removed);
       return newState;
+    }
+    case actionTypes.TOGGLE_VIBRATIONS: {
+      return { ...state, vibrations: !state.vibrations };
     }
     default:
       throw new Error("Invalid action type");

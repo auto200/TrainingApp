@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
-import Countdown, { zeroPad } from "react-countdown-now";
+import Countdown, { zeroPad } from "react-countdown";
 import pauseVid from "../assets/pauseVid.mp4";
 import endVid from "../assets/endVid.mp4";
 import { useSettings } from "../contexts/SettingsContext";
@@ -46,7 +46,7 @@ const STATES = {
 
 const TrainingStarted = ({ trainingData }) => {
   const {
-    settings: { speechSynth, currentLanguage },
+    settings: { speechSynth, currentLanguage, vibrations },
   } = useSettings();
   const { speak } = useSpeechSyntesis();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -54,6 +54,7 @@ const TrainingStarted = ({ trainingData }) => {
   const counterRef = useRef(null);
   const pauseVideoTimestamp = useRef(0);
   const soundBeepsCounter = useRef(3);
+  const lastCount = useRef(null);
 
   const currentExercise = trainingData[currentExerciseIndex];
   const [timeToCountdown, setTimeToCountdown] = useState(Date.now() + 3000); // 3 seconds prepare time
@@ -122,6 +123,9 @@ const TrainingStarted = ({ trainingData }) => {
         pauseVideoTimestamp={pauseVideoTimestamp}
         playAudio={audioManager.play}
         soundBeepsCounter={soundBeepsCounter}
+        lastCount={lastCount}
+        state={state}
+        vibrations={vibrations}
       />
       <ExerciseCounter>
         {currentExerciseIndex + 1}/{trainingData.length}
@@ -136,13 +140,44 @@ const renderer = ({
   seconds,
   minutes,
   api: { isPaused, isCompleted },
-  props: { pauseVideoTimestamp, playAudio, soundBeepsCounter },
+  props: {
+    pauseVideoTimestamp,
+    playAudio,
+    soundBeepsCounter,
+    lastCount,
+    state,
+    vibrations,
+  },
 }) => {
   console.log(soundBeepsCounter.current);
   const closeToEnd = !minutes && seconds <= 3;
-  if (closeToEnd && soundBeepsCounter.current) {
+  if (
+    closeToEnd &&
+    soundBeepsCounter.current &&
+    lastCount.current !== seconds
+  ) {
+    if (navigator && vibrations) {
+      switch (state) {
+        case STATES.PREPARING: {
+          if (state === STATES.PREPARING && seconds === 1) {
+            navigator.vibrate(800);
+          }
+          break;
+        }
+        case STATES.EXERCISING: {
+          if (seconds === 1) navigator.vibrate(800);
+          else navigator.vibrate(250);
+        }
+        case STATES.RESTING: {
+          if (seconds === 1) navigator.vibrate(1500);
+        }
+      }
+    }
     playAudio(menu_sound);
     soundBeepsCounter.current--;
+  }
+  if (!minutes) {
+    lastCount.current = seconds;
   }
   const onLoadedMetadata = e => {
     e.target.currentTime = pauseVideoTimestamp.current;
