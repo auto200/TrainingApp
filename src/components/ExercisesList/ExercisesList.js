@@ -1,8 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import styled from "styled-components";
-import { useSettings } from "../../contexts/SettingsContext";
 import { useExercises, actionTypes } from "../../contexts/ExercisesContext";
-import { exercisesList } from "../../translations";
 import { Paper } from "@material-ui/core";
 import ExerciseItem from "./ExerciseItem";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,9 +22,6 @@ const EmptyListWarning = styled.div`
 `;
 
 const ExercisesList = () => {
-  const {
-    settings: { currentLanguage },
-  } = useSettings();
   const { exercises, dispatch } = useExercises();
   const listRef = useRef(null);
   const currentExercisePlan = exercises.plans[exercises.current];
@@ -89,9 +84,7 @@ const ExercisesList = () => {
                 ref={listRef}
               >
                 {!exercises.current ? (
-                  <EmptyListWarning>
-                    {exercisesList.noPlan[currentLanguage]}
-                  </EmptyListWarning>
+                  <EmptyListWarning>Create training plan</EmptyListWarning>
                 ) : currentExercisePlan.list.length ? (
                   <AnimatePresence>
                     {currentExercisePlan.list.map((exercise, index) => (
@@ -108,7 +101,8 @@ const ExercisesList = () => {
                   </AnimatePresence>
                 ) : (
                   <EmptyListWarning>
-                    {exercisesList.emptyList[currentLanguage]}
+                    This plan doesn't have any exercises yet. You can add them
+                    above!
                   </EmptyListWarning>
                 )}
               </ExercisesListWrapper>

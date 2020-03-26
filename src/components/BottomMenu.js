@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "gatsby";
-import { bottomMenu } from "../translations";
-import { useSettings } from "../contexts/SettingsContext";
 import { menuHeight } from "../utils/constants";
 import menu_select from "../assets/menu_select.mp3";
 import audioManager from "../utils/audioManager";
@@ -35,10 +33,6 @@ const StyledLink = styled(Link)`
 `;
 
 const BottomMenu = () => {
-  const {
-    settings: { currentLanguage },
-  } = useSettings();
-
   return (
     <StyledContainer>
       <StyledLink
@@ -48,7 +42,7 @@ const BottomMenu = () => {
           audioManager.play(menu_select);
         }}
       >
-        {bottomMenu.overwiew[currentLanguage]}
+        Overview
       </StyledLink>
       <StyledLink
         to="/training"
@@ -57,7 +51,7 @@ const BottomMenu = () => {
           audioManager.play(menu_select);
         }}
       >
-        {bottomMenu.training[currentLanguage]}
+        Training
       </StyledLink>
     </StyledContainer>
   );

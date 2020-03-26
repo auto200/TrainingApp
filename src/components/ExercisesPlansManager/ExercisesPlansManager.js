@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { useSettings } from "../../contexts/SettingsContext";
 import { useExercises, actionTypes } from "../../contexts/ExercisesContext";
 import { useModal } from "../../contexts/ModalContext";
 import {
@@ -11,7 +10,6 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { Edit, DeleteForever, Add } from "@material-ui/icons";
-import { exercisesPlansManager, utils } from "../../translations";
 import modalTypes from "../Modals/modalTypes";
 import uuid from "uuid/v4";
 
@@ -31,15 +29,10 @@ const StyledAddButton = styled(Add)`
 `;
 
 const ExercisesPlansManager = () => {
-  const {
-    settings: { currentLanguage },
-  } = useSettings();
   const { exercises, dispatch } = useExercises();
   const { setCurrentModal, closeModal } = useModal();
   const noPlans = !Object.keys(exercises.plans).length;
   const EMPTY_PLAN = "EMPTY_PLAN";
-  const addNewPlan = exercisesPlansManager.dialogs.addNewPlan;
-  const editPlanName = exercisesPlansManager.dialogs.editPlanName;
 
   const handlePlanChange = e => {
     const value = e.target.value;
@@ -53,22 +46,18 @@ const ExercisesPlansManager = () => {
   const showEditPlanModal = () => {
     setCurrentModal({
       type: modalTypes.SINGLE_INPUT,
-      title: exercisesPlansManager.dialogs.editPlanName.title[currentLanguage],
-      inputLabel:
-        exercisesPlansManager.dialogs.editPlanName.inputLabel[currentLanguage],
-      inputPlaceholder:
-        exercisesPlansManager.dialogs.editPlanName.inputPlaceholder[
-          currentLanguage
-        ],
+      title: "Edit plan name",
+      inputLabel: "New name",
+      inputPlaceholder: "e.g Morning stretching",
       initialValues: {
         planName: exercises.current,
       },
-      closeButtonText: utils.cancel[currentLanguage],
+      closeButtonText: "Cancel",
       onClose: closeModal,
       validate: values => {
         const errors = {};
         if (!values.planName.length) {
-          errors.planName = editPlanName.inputErrors.empty[currentLanguage];
+          errors.planName = "Please, provide plan name";
         }
         //check if other plans incudes new name
         else if (
@@ -76,12 +65,11 @@ const ExercisesPlansManager = () => {
             .filter(el => el !== exercises.current)
             .includes(values.planName)
         ) {
-          errors.planName =
-            editPlanName.inputErrors.alreadyExists[currentLanguage];
+          errors.planName = "This plan with this name already exists";
         }
         return errors;
       },
-      confirmButtonText: utils.change[currentLanguage],
+      confirmButtonText: "Change",
       onConfirm: ({ planName }) => {
         if (planName === exercises.current) {
           closeModal();
@@ -99,25 +87,24 @@ const ExercisesPlansManager = () => {
   const showAddPlanModal = () => {
     setCurrentModal({
       type: modalTypes.SINGLE_INPUT,
-      title: addNewPlan.title[currentLanguage],
-      inputLabel: addNewPlan.inputLabel[currentLanguage],
-      inputPlaceholder: addNewPlan.inputPlaceholder[currentLanguage],
+      title: "Add plan",
+      inputLabel: "Name",
+      inputPlaceholder: "e.g Morning stretching",
       initialValues: {
         planName: "",
       },
-      closeButtonText: utils.cancel[currentLanguage],
+      closeButtonText: "Cancel",
       onClose: closeModal,
       validate: values => {
         const errors = {};
         if (!values.planName.length) {
-          errors.planName = addNewPlan.inputErrors.empty[currentLanguage];
+          errors.planName = "Please, provide plan name";
         } else if (Object.keys(exercises.plans).includes(values.planName)) {
-          errors.planName =
-            addNewPlan.inputErrors.alreadyExists[currentLanguage];
+          errors.planName = "This plan with this name already exists";
         }
         return errors;
       },
-      confirmButtonText: utils.add[currentLanguage],
+      confirmButtonText: "Add",
       onConfirm: ({ planName }) => {
         dispatch({
           type: actionTypes.CREATE_EXERCISE_PLAN,
@@ -138,20 +125,18 @@ const ExercisesPlansManager = () => {
 
   const DeletePlanModalContent = (
     <>
-      <div>
-        {exercisesPlansManager.dialogs.deletePlan.content[currentLanguage]}
-      </div>{" "}
+      <div>Are You sure You want to delete this plan?</div>{" "}
       <b>{exercises.current}</b>
     </>
   );
   const showDeletePlanModal = () => {
     setCurrentModal({
       type: modalTypes.CONFIRM,
-      title: exercisesPlansManager.dialogs.deletePlan.title[currentLanguage],
+      title: "Delete plan",
       content: DeletePlanModalContent,
-      closeButtonText: utils.cancel[currentLanguage],
+      closeButtonText: "Cancel",
       onClose: closeModal,
-      confirmButtonText: utils.delete[currentLanguage],
+      confirmButtonText: "Delete",
       onConfirm: () => {
         dispatch({
           type: actionTypes.DELETE_CURRENT_EXERCISE_PLAN,
@@ -164,9 +149,7 @@ const ExercisesPlansManager = () => {
   return (
     <StyledWrapper>
       <InputLabel style={{ fontSize: "1.3rem" }} id="selectLabel" shrink>
-        {!exercises.current
-          ? exercisesPlansManager.selectLabel.noPlanSelected[currentLanguage]
-          : exercisesPlansManager.selectLabel.currentPlan[currentLanguage]}
+        {!exercises.current ? "No plan selected" : "Current plan:"}
       </InputLabel>
       <div>
         <Select
@@ -177,9 +160,7 @@ const ExercisesPlansManager = () => {
           labelId="selectLabel"
         >
           {noPlans ? (
-            <MenuItem value={EMPTY_PLAN}>
-              {exercisesPlansManager.noPlans[currentLanguage]}
-            </MenuItem>
+            <MenuItem value={EMPTY_PLAN}>No plans</MenuItem>
           ) : (
             Object.keys(exercises.plans).map(name => (
               <MenuItem value={name} key={exercises.plans[name].id}>
@@ -189,27 +170,21 @@ const ExercisesPlansManager = () => {
           )}
         </Select>
         <div>
-          <Tooltip
-            title={exercisesPlansManager.iconTitles.edit[currentLanguage]}
-          >
+          <Tooltip title="Edit plan name">
             <span>
               <IconButton disabled={noPlans} onClick={showEditPlanModal}>
                 <Edit />
               </IconButton>
             </span>
           </Tooltip>
-          <Tooltip
-            title={exercisesPlansManager.iconTitles.delete[currentLanguage]}
-          >
+          <Tooltip title="Delete current plan">
             <span>
               <IconButton disabled={noPlans} onClick={showDeletePlanModal}>
                 <DeleteForever />
               </IconButton>
             </span>
           </Tooltip>
-          <Tooltip
-            title={exercisesPlansManager.iconTitles.add[currentLanguage]}
-          >
+          <Tooltip title="Add new plan">
             <IconButton onClick={showAddPlanModal}>
               <StyledAddButton
                 shine={noPlans ? 1 : 0}

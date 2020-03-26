@@ -1,9 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import { exercisesList, utils } from "../../translations";
 import { IconButton, Tooltip } from "@material-ui/core";
-import { useSettings } from "../../contexts/SettingsContext";
 import { useExercises, actionTypes } from "../../contexts/ExercisesContext";
 import { useModal } from "../../contexts/ModalContext";
 import { Draggable } from "react-beautiful-dnd";
@@ -60,26 +58,22 @@ const getItemStyle = (isDragging, draggableStyle) => {
 
 const ExerciseItem = React.memo(({ id, name, index, duration, rest }) => {
   console.log("rerender");
-  const {
-    settings: { currentLanguage },
-  } = useSettings();
   const { dispatch } = useExercises();
   const { setCurrentModal, closeModal } = useModal();
 
   const DeleteExerciseModalContent = (
     <>
-      <div>{exercisesList.dialogs.deleteExercise.content[currentLanguage]}</div>{" "}
-      <b>{name}</b>
+      <div>Delete exercise</div> <b>{name}</b>
     </>
   );
   const showDeleteExerciseModal = () => {
     setCurrentModal({
       type: modalTypes.CONFIRM,
-      title: exercisesList.dialogs.deleteExercise.title[currentLanguage],
+      title: "Delete exercise",
       content: DeleteExerciseModalContent,
-      closeButtonText: utils.cancel[currentLanguage],
+      closeButtonText: "Cancel",
       onClose: closeModal,
-      confirmButtonText: utils.delete[currentLanguage],
+      confirmButtonText: "Delete",
       onConfirm: () => {
         dispatch({
           type: actionTypes.DELETE_EXERCISE,
@@ -145,12 +139,12 @@ const ExerciseItem = React.memo(({ id, name, index, duration, rest }) => {
               </div>
             </InfoContainder>
             <div style={{ display: "flex" }}>
-              <Tooltip title={exercisesList.tooltips.edit[currentLanguage]}>
+              <Tooltip title="Edit exercise">
                 <IconButton onClick={showEditExerciseModal}>
                   <Edit />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={exercisesList.tooltips.delete[currentLanguage]}>
+              <Tooltip title="Delete exercise">
                 <IconButton onClick={showDeleteExerciseModal}>
                   <DeleteForever />
                 </IconButton>

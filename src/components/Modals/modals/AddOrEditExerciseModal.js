@@ -9,9 +9,7 @@ import {
   FormControl,
   TextField,
 } from "@material-ui/core";
-import { useSettings } from "../../../contexts/SettingsContext";
 import { useExercises, actionTypes } from "../../../contexts/ExercisesContext";
-import { addOrEditExerciseDialog, utils } from "../../../translations";
 import { Formik, useField, Form } from "formik";
 import uuid from "uuid/v4";
 import * as yup from "yup";
@@ -31,10 +29,6 @@ TODO:
 refactor this shitty ass ugly looking component to be more generic when i feel its worth it
 */
 const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
-  const {
-    settings: { currentLanguage },
-  } = useSettings();
-
   const { dispatch, exercises } = useExercises();
 
   const exercise =
@@ -46,27 +40,18 @@ const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
     {};
 
   const validationSchema = yup.object().shape({
-    name: yup
-      .string()
-      .required(addOrEditExerciseDialog.errors.name.required[currentLanguage]),
+    name: yup.string().required("Please insert name"),
     duration: yup
       .number()
-      .typeError(
-        addOrEditExerciseDialog.errors.duration.typeError[currentLanguage]
-      )
-      .required(
-        addOrEditExerciseDialog.errors.duration.required[currentLanguage]
-      )
-      .integer(addOrEditExerciseDialog.errors.duration.integer[currentLanguage])
-      .moreThan(
-        9,
-        addOrEditExerciseDialog.errors.duration.moreThan[currentLanguage]
-      ),
+      .typeError("Please insert a number")
+      .required("Please insert duration")
+      .integer("Are you scientist?")
+      .moreThan(9, "Pff lame (at least 10s)"),
     rest: yup
       .number()
-      .typeError(addOrEditExerciseDialog.errors.rest.typeError[currentLanguage])
-      .required(addOrEditExerciseDialog.errors.rest.required[currentLanguage])
-      .integer(addOrEditExerciseDialog.errors.rest.integer[currentLanguage]),
+      .typeError("Please insert a number")
+      .required("Please insert rest duration")
+      .integer("Are you scientist?"),
   });
   const defaultValues = {
     name: "",
@@ -99,9 +84,7 @@ const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
   return (
     <Dialog open={true} onClose={onClose}>
       <DialogTitle>
-        {config.type === TYPES.ADD
-          ? addOrEditExerciseDialog.title.add[currentLanguage]
-          : addOrEditExerciseDialog.title.edit[currentLanguage]}
+        {config.type === TYPES.ADD ? "Add new exercise!" : "Edit exercise"}
       </DialogTitle>
       <DialogContent>
         <Formik
@@ -113,10 +96,8 @@ const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
             <StyledForm id="editExerciseForm">
               <FormControl>
                 <MyInputField
-                  label={addOrEditExerciseDialog.labels.name[currentLanguage]}
-                  placeholder={
-                    addOrEditExerciseDialog.placeholders.name[currentLanguage]
-                  }
+                  label="Exercise name"
+                  placeholder={"e.g Push ups"}
                   name="name"
                   id="name"
                   type="input"
@@ -126,14 +107,8 @@ const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
               </FormControl>
               <FormControl margin="dense">
                 <MyInputField
-                  label={
-                    addOrEditExerciseDialog.labels.duration[currentLanguage]
-                  }
-                  placeholder={
-                    addOrEditExerciseDialog.placeholders.duration[
-                      currentLanguage
-                    ]
-                  }
+                  label={"                    Duration (s)"}
+                  placeholder={"e.g 30"}
                   name="duration"
                   id="duration"
                   type="number"
@@ -141,10 +116,8 @@ const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
               </FormControl>
               <FormControl margin="dense">
                 <MyInputField
-                  label={addOrEditExerciseDialog.labels.rest[currentLanguage]}
-                  placeholder={
-                    addOrEditExerciseDialog.placeholders.rest[currentLanguage]
-                  }
+                  label="Rest time (s)"
+                  placeholder={"e.g 5"}
                   name="rest"
                   id="rest"
                   type="number"
@@ -155,11 +128,9 @@ const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
         </Formik>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>{utils.cancel[currentLanguage]}</Button>
+        <Button onClick={onClose}>Cancel</Button>
         <Button type="submit" form="editExerciseForm" color="secondary">
-          {config.type === TYPES.ADD
-            ? utils.add[currentLanguage]
-            : utils.change[currentLanguage]}
+          {config.type === TYPES.ADD ? "Add" : "Change"}
         </Button>
       </DialogActions>
     </Dialog>

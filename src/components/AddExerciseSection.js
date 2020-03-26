@@ -2,8 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { Fab } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
-import { exercisesPlansManager } from "../translations";
-import { useSettings } from "../contexts/SettingsContext";
 import { useModal } from "../contexts/ModalContext";
 import { motion } from "framer-motion";
 import modalTypes from "./Modals/modalTypes";
@@ -19,9 +17,6 @@ const Text = styled.div`
 `;
 const MotionFab = motion.custom(Fab);
 const AddExerciseSection = () => {
-  const {
-    settings: { currentLanguage },
-  } = useSettings();
   const { setCurrentModal, closeModal } = useModal();
 
   const showAddExerciseModal = () => {
@@ -36,7 +31,7 @@ const AddExerciseSection = () => {
 
   return (
     <StyledWrapper>
-      <Text>{exercisesPlansManager.addNewPlan[currentLanguage]}</Text>
+      <Text>Add exercise:</Text>
       <MotionFab
         color="secondary"
         initial={{ scale: 0 }}

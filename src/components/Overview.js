@@ -6,8 +6,6 @@ import { IconButton, Tooltip, Paper } from "@material-ui/core";
 import AddExerciseSection from "./AddExerciseSection";
 import { Settings as GearIcon, GitHub } from "@material-ui/icons";
 import ExercisesList from "./ExercisesList/ExercisesList";
-import { overview } from "../translations";
-import { useSettings } from "../contexts/SettingsContext";
 import { useExercises } from "../contexts/ExercisesContext";
 
 const StyledWrapper = styled.div`
@@ -40,9 +38,6 @@ const HeaderSection = styled(Paper)`
   align-items: center;
 `;
 const Overview = () => {
-  const {
-    settings: { currentLanguage },
-  } = useSettings();
   const { exercises } = useExercises();
   return (
     <StyledWrapper>
@@ -55,13 +50,13 @@ const Overview = () => {
         </IconButton>
       </GitHubIconContainer>
       <GearIconContainer to="/settings">
-        <Tooltip title={overview.settingsTooltip[currentLanguage]}>
+        <Tooltip title="Settings">
           <IconButton>
             <GearIcon fontSize="large" />
           </IconButton>
         </Tooltip>
       </GearIconContainer>
-      <Title>{overview.title[currentLanguage]}</Title>
+      <Title>Pump it!</Title>
       <HeaderSection>
         <ExercisesPlansManager />
         {exercises.current && <AddExerciseSection />}
@@ -70,7 +65,7 @@ const Overview = () => {
       {exercises.current &&
         exercises.plans[exercises.current].list.length >= 2 && (
           <div style={{ textAlign: "right", width: "95%", maxWidth: 550 }}>
-            {overview.reorderHint[currentLanguage]}
+            You can reorder exercises!
           </div>
         )}
     </StyledWrapper>

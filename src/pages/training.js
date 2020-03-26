@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import SEO from "../components/Seo";
 import styled from "styled-components";
 import TrainingStarted from "../components/TrainingStarted";
-import { useSettings } from "../contexts/SettingsContext";
 import { useExercises } from "../contexts/ExercisesContext";
-import { training } from "../translations";
 import BackgroundImage from "gatsby-background-image";
 import { useStaticQuery, graphql } from "gatsby";
 import { menuHeight } from "../utils/constants";
@@ -37,9 +35,6 @@ const TrainingPage = () => {
   `);
 
   const [isTraining, setIsTraining] = useState(false);
-  const {
-    settings: { currentLanguage },
-  } = useSettings();
   const { exercises: exercisesPlans } = useExercises();
   const plan = exercisesPlans.current;
   const exercises = plan && exercisesPlans.plans[exercisesPlans.current].list;
@@ -49,16 +44,18 @@ const TrainingPage = () => {
   let InnerComponent = null;
   if (!plan) {
     InnerComponent = (
-      <TapToStart>{training.noPlanError[currentLanguage]}</TapToStart>
+      <TapToStart>
+        To start training You need to create plan in the overview section
+      </TapToStart>
     );
   } else if (!exercises.length) {
     InnerComponent = (
-      <TapToStart>{training.noExercisesError[currentLanguage]}</TapToStart>
+      <TapToStart>
+        "You dont have any exercised added yet. Change it by going to overview!"
+      </TapToStart>
     );
   } else if (!isTraining) {
-    InnerComponent = (
-      <TapToStart>{training.tapToStart[currentLanguage]}</TapToStart>
-    );
+    InnerComponent = <TapToStart>TAP to begain exercising</TapToStart>;
   } else {
     InnerComponent = <TrainingStarted trainingData={exercises} />;
   }

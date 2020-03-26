@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core/";
 import { ArrowBack } from "@material-ui/icons";
 import useSpeechSyntesis from "../utils/hooks/useSpeechSynthesis";
-import { settings as settingsTransl, voicePreview } from "../translations";
 
 const StyledWrapper = styled.div`
   width: 100%;
@@ -50,7 +49,7 @@ const Row = styled(Paper)`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: 450px;
+  max-width: 550px;
   padding: 10px;
 `;
 const SettingName = styled.div`
@@ -67,7 +66,7 @@ const StyledSelect = styled(Select)`
 const Settings = () => {
   const { settings, dispatch } = useSettings();
   const { speak } = useSpeechSyntesis();
-  const toggleVoiceEnabled = () => {
+  const toggleTTS = () => {
     dispatch({
       type: actionTypes.TOGGLE_TTS,
     });
@@ -79,20 +78,13 @@ const Settings = () => {
     });
   };
 
-  const handleLanguageChange = e => {
-    dispatch({
-      type: actionTypes.SET_CURRENT_LANGUAGE,
-      payload: e.target.value,
-    });
-  };
-
   const handleVoiceChange = e => {
     dispatch({
       type: actionTypes.SET_SPEECH_SYNTH_SELECTED_VOICE_INDEX,
       payload: e.target.value,
     });
     speak({
-      text: voicePreview[settings.currentLanguage],
+      text: "I will be telling you the exercise name",
       voice: settings.speechSynth.voices[e.target.value],
     });
   };
@@ -106,67 +98,15 @@ const Settings = () => {
             <BackButton fontSize="large" />
           </IconButton>
         </BackButtonContainer>
-        <span>{settingsTransl.title[settings.currentLanguage]}</span>
+        <span>Settings</span>
       </Header>
       <SettingsContainer>
         <Row>
-          <SettingName>
-            {settingsTransl.language[settings.currentLanguage]}
-          </SettingName>
-          <StyledSelect
-            value={settings.currentLanguage}
-            onChange={handleLanguageChange}
-          >
-            <MenuItem value={settings.languages.en}>English</MenuItem>
-            <MenuItem value={settings.languages.pl}>Polski</MenuItem>
-          </StyledSelect>
-        </Row>
-        <Row>
-          <SettingName>
-            {settingsTransl.voiceSynth[settings.currentLanguage]}
-          </SettingName>
-          <Tooltip
-            open={!settings.speechSynth.supported}
-            title={settingsTransl.notSupported[settings.currentLanguage]}
-            placement="left-end"
-          >
-            <Switch
-              checked={settings.speechSynth.enabled}
-              onChange={toggleVoiceEnabled}
-              disabled={
-                !settings.speechSynth.supported ||
-                !settings.speechSynth.voices.length
-              }
-            />
-          </Tooltip>
-        </Row>
-        {settings.speechSynth.enabled &&
-          settings.speechSynth.voices.length > 0 && (
-            <Row>
-              <SettingName>
-                {settingsTransl.languageOfSpeech[settings.currentLanguage]}
-              </SettingName>
-              <StyledSelect
-                value={settings.speechSynth.selectedVoiceIndex}
-                onChange={handleVoiceChange}
-              >
-                {settings.speechSynth.voices.map((voice, index) => (
-                  <MenuItem key={voice.voiceURI} value={index}>
-                    {voice.name}
-                  </MenuItem>
-                ))}
-              </StyledSelect>
-            </Row>
-          )}
-        <Row>
-          <SettingName>
-            {settingsTransl.vibrations.title[settings.currentLanguage]}
-          </SettingName>
+          <SettingName>Vibrations</SettingName>
           <Tooltip
             open={!settings.vibrations}
-            title={settingsTransl.vibrations.tooltip[settings.currentLanguage]}
+            title="Vibrate on start/end of the exercise"
             placement="left-end"
-            style={{ zIndex: 100 }}
           >
             <Switch
               checked={settings.vibrations}
@@ -179,6 +119,39 @@ const Settings = () => {
             />
           </Tooltip>
         </Row>
+        <Row>
+          <SettingName>Voice synth:</SettingName>
+          <Tooltip
+            open={!settings.speechSynth.supported}
+            title="Not supported in your browser"
+            placement="left-end"
+          >
+            <Switch
+              checked={settings.speechSynth.enabled}
+              onChange={toggleTTS}
+              disabled={
+                !settings.speechSynth.supported ||
+                !settings.speechSynth.voices.length
+              }
+            />
+          </Tooltip>
+        </Row>
+        {settings.speechSynth.enabled &&
+          settings.speechSynth.voices.length > 0 && (
+            <Row>
+              <SettingName>Language of speech:</SettingName>
+              <StyledSelect
+                value={settings.speechSynth.selectedVoiceIndex}
+                onChange={handleVoiceChange}
+              >
+                {settings.speechSynth.voices.map((voice, index) => (
+                  <MenuItem key={voice.voiceURI} value={index}>
+                    {voice.name}
+                  </MenuItem>
+                ))}
+              </StyledSelect>
+            </Row>
+          )}
       </SettingsContainer>
     </StyledWrapper>
   );

@@ -5,7 +5,6 @@ import pauseVid from "../assets/pauseVid.mp4";
 import endVid from "../assets/endVid.mp4";
 import { useSettings } from "../contexts/SettingsContext";
 import useSpeechSyntesis from "../utils/hooks/useSpeechSynthesis";
-import { trainingStarted } from "../translations";
 import menu_sound from "../assets/menu_select.mp3";
 import audioManager from "../utils/audioManager";
 
@@ -46,7 +45,7 @@ const STATES = {
 
 const TrainingStarted = ({ trainingData }) => {
   const {
-    settings: { speechSynth, currentLanguage, vibrations },
+    settings: { speechSynth, vibrations },
   } = useSettings();
   const { speak } = useSpeechSyntesis();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -109,9 +108,9 @@ const TrainingStarted = ({ trainingData }) => {
   return (
     <Background onClick={togglePause}>
       <Title>
-        {state === STATES.PREPARING && trainingStarted.prepare[currentLanguage]}
+        {state === STATES.PREPARING && "Prepare"}
         {state === STATES.EXERCISING && currentExercise.name}
-        {state === STATES.RESTING && trainingStarted.rest[currentLanguage]}
+        {state === STATES.RESTING && "Rest"}
       </Title>
       <Countdown
         ref={counterRef}
