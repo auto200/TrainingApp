@@ -32,7 +32,7 @@ const initialState = {
 export const actionTypes = {
   SET_SETTINGS: "SET_SETTINGS",
   SET_CURRENT_LANGUAGE: "SET_CURRENT_LANGUAGE",
-  TOGGLE_VOICE_ENABLED: "TOGGLE_VOICE_ENABLED",
+  TOGGLE_TTS: "TOGGLE_TTS",
   SET_SPEECH_SYNTH_SUPPORTED: "SET_SPEECH_SYNTH_SUPPORTED",
   SET_SPEECH_SYNTH_VOICES: "SET_SPEECH_SYNTH_VOICES",
   SET_SPEECH_SYNTH_SELECTED_VOICE_INDEX:
@@ -56,7 +56,7 @@ const reducer = (state, action) => {
     case actionTypes.SET_CURRENT_LANGUAGE: {
       return { ...state, currentLanguage: action.payload };
     }
-    case actionTypes.TOGGLE_VOICE_ENABLED: {
+    case actionTypes.TOGGLE_TTS: {
       const newState = { ...state };
       newState.speechSynth.enabled = !newState.speechSynth.enabled;
       return newState;

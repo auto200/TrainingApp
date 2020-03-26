@@ -69,7 +69,7 @@ const Settings = () => {
   const { speak } = useSpeechSyntesis();
   const toggleVoiceEnabled = () => {
     dispatch({
-      type: actionTypes.TOGGLE_VOICE_ENABLED,
+      type: actionTypes.TOGGLE_TTS,
     });
   };
 
@@ -173,7 +173,8 @@ const Settings = () => {
               onChange={toggleVibrations}
               disabled={
                 typeof window !== "undefined" &&
-                !window.navigator && !window.navigator.vibrate
+                !window.navigator &&
+                !window.navigator.vibrate
               }
             />
           </Tooltip>
