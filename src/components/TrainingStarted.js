@@ -167,10 +167,14 @@ const renderer = ({
         case STATES.EXERCISING: {
           if (seconds === 1) navigator.vibrate(800);
           else navigator.vibrate(250);
+          break;
         }
         case STATES.RESTING: {
           if (seconds === 1) navigator.vibrate(1500);
+          break;
         }
+        default:
+          break;
       }
     }
     playAudio(menu_sound);
