@@ -12,6 +12,7 @@ const initialState = {
   },
   vibrations: true,
 };
+
 export const actionTypes = {
   SET_SETTINGS: "SET_SETTINGS",
   TOGGLE_TTS: "TOGGLE_TTS",
@@ -21,6 +22,7 @@ export const actionTypes = {
     "SET_SPEECH_SYNTH_SELECTED_VOICE_INDEX",
   TOGGLE_VIBRATIONS: "TOGGLE_VIBRATIONS",
 };
+
 const reducer = (state, action) => {
   switch (action.type) {
     case actionTypes.SET_SETTINGS: {
@@ -57,6 +59,7 @@ const reducer = (state, action) => {
 const SettingsContextProvider = ({ children }) => {
   const [settings, dispatch] = useReducer(reducer, initialState);
   const { supported: speechSynthSupported, voices } = useSpeechSyntesis();
+
   useEffect(() => {
     try {
       const storedSettings = JSON.parse(localStorage.getItem("settings"));
