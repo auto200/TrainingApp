@@ -11,10 +11,6 @@ const initialState = {
     selectedVoiceIndex: 0,
   },
   vibrations: true,
-  exercisesPlans: {
-    current: "",
-    plans: {},
-  },
 };
 export const actionTypes = {
   SET_SETTINGS: "SET_SETTINGS",
