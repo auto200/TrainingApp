@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 import { exercisesList, utils } from "../../translations";
 import { IconButton, Tooltip } from "@material-ui/core";
 import { useSettings } from "../../contexts/SettingsContext";
+import { useExercises, actionTypes } from "../../contexts/ExercisesContext";
 import { useModal } from "../../contexts/ModalContext";
 import { Draggable } from "react-beautiful-dnd";
 import modalTypes from "../Modals/modalTypes";
-import { actionTypes } from "../../contexts/SettingsContext";
 import { TYPES as innerTypes } from "../Modals/modals/AddOrEditExerciseModal";
 import {
   FitnessCenter,
@@ -62,8 +62,8 @@ const ExerciseItem = React.memo(({ id, name, index, duration, rest }) => {
   console.log("rerender");
   const {
     settings: { currentLanguage },
-    dispatch,
   } = useSettings();
+  const { dispatch } = useExercises();
   const { setCurrentModal, closeModal } = useModal();
 
   const DeleteExerciseModalContent = (

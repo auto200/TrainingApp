@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useReducer, useContext } from "react";
 import useSpeechSyntesis from "../utils/hooks/useSpeechSynthesis";
 
-export const SettingsContext = createContext();
+const SettingsContext = createContext();
 
 const getBrowserLanguage = () => {
   try {
@@ -23,11 +23,11 @@ const initialState = {
     en: "en",
   },
   currentLanguage: getBrowserLanguage(),
+  vibrations: true,
   exercisesPlans: {
     current: "",
     plans: {},
   },
-  vibrations: true,
 };
 export const actionTypes = {
   SET_SETTINGS: "SET_SETTINGS",
@@ -37,20 +37,22 @@ export const actionTypes = {
   SET_SPEECH_SYNTH_VOICES: "SET_SPEECH_SYNTH_VOICES",
   SET_SPEECH_SYNTH_SELECTED_VOICE_INDEX:
     "SET_SPEECH_SYNTH_SELECTED_VOICE_INDEX",
-  SET_CURRENT_EXERCISES_PLAN: "SET_CURRENT_EXERCISES_PLAN",
-  CREATE_EXERCISES_PLAN: "CREATE_EXERCISES_PLAN",
+  TOGGLE_VIBRATIONS: "TOGGLE_VIBRATIONS",
+  //this sould be in diffrent context
+  SET_CURRENT_EXERCISE_PLAN: "SET_CURRENT_EXERCISE_PLAN",
+  CREATE_EXERCISE_PLAN: "CREATE_EXERCISE_PLAN",
   ADD_EXERCISE: "ADD_EXERCISE",
-  DELETE_CURRENT_EXERCISES_PLAN: "DELETE_CURRENT_EXERCISES_PLAN",
-  EDIT_CURRENT_EXERCISES_PLAN_NAME: "EDIT_CURRENT_EXERCISES_PLAN_NAME",
+  DELETE_CURRENT_EXERCISE_PLAN: "DELETE_CURRENT_EXERCISE_PLAN",
+  EDIT_CURRENT_EXERCISE_PLAN_NAME: "EDIT_CURRENT_EXERCISE_PLAN_NAME",
   DELETE_EXERCISE: "DELETE_EXERCISE",
   EDIT_EXERCISE: "EDIT_EXERCISE",
   REORDER_EXERCISES: "REORDER_EXERCISES",
-  TOGGLE_VIBRATIONS: "TOGGLE_VIBRATIONS",
 };
 const reducer = (state, action) => {
   switch (action.type) {
-    case actionTypes.SET_SETTINGS:
+    case actionTypes.SET_SETTINGS: {
       return action.payload;
+    }
     case actionTypes.SET_CURRENT_LANGUAGE: {
       return { ...state, currentLanguage: action.payload };
     }
@@ -74,12 +76,15 @@ const reducer = (state, action) => {
       newState.speechSynth.selectedVoiceIndex = action.payload;
       return newState;
     }
-    case actionTypes.SET_CURRENT_EXERCISES_PLAN: {
+    case actionTypes.TOGGLE_VIBRATIONS: {
+      return { ...state, vibrations: !state.vibrations };
+    }
+    case actionTypes.SET_CURRENT_EXERCISE_PLAN: {
       const newState = { ...state };
       newState.exercisesPlans.current = action.payload;
       return newState;
     }
-    case actionTypes.CREATE_EXERCISES_PLAN: {
+    case actionTypes.CREATE_EXERCISE_PLAN: {
       const newState = { ...state };
       newState.exercisesPlans.plans[action.payload.name] = {
         id: action.payload.id,
@@ -96,7 +101,7 @@ const reducer = (state, action) => {
       ];
       return newState;
     }
-    case actionTypes.DELETE_CURRENT_EXERCISES_PLAN: {
+    case actionTypes.DELETE_CURRENT_EXERCISE_PLAN: {
       const newState = { ...state };
       delete newState.exercisesPlans.plans[newState.exercisesPlans.current];
       // select any other or no plan as current
@@ -106,7 +111,7 @@ const reducer = (state, action) => {
         )[0] || "";
       return newState;
     }
-    case actionTypes.EDIT_CURRENT_EXERCISES_PLAN_NAME: {
+    case actionTypes.EDIT_CURRENT_EXERCISE_PLAN_NAME: {
       const newState = { ...state };
       const current = newState.exercisesPlans.current;
       if (current === action.payload) return state;
@@ -152,9 +157,6 @@ const reducer = (state, action) => {
       const [removed] = plan.splice(source, 1);
       plan.splice(destination, 0, removed);
       return newState;
-    }
-    case actionTypes.TOGGLE_VIBRATIONS: {
-      return { ...state, vibrations: !state.vibrations };
     }
     default:
       throw new Error("Invalid action type");

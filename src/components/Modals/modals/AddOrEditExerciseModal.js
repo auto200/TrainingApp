@@ -9,7 +9,8 @@ import {
   FormControl,
   TextField,
 } from "@material-ui/core";
-import { useSettings, actionTypes } from "../../../contexts/SettingsContext";
+import { useSettings } from "../../../contexts/SettingsContext";
+import { useExercises, actionTypes } from "../../../contexts/ExercisesContext";
 import { addOrEditExerciseDialog, utils } from "../../../translations";
 import { Formik, useField, Form } from "formik";
 import uuid from "uuid/v4";
@@ -31,14 +32,15 @@ refactor this shitty ass ugly looking component to be more generic when i feel i
 */
 const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
   const {
-    settings: { currentLanguage, exercisesPlans },
-    dispatch,
+    settings: { currentLanguage },
   } = useSettings();
+
+  const { dispatch, exercises } = useExercises();
 
   const exercise =
     (config.type === TYPES.EDIT &&
-      exercisesPlans.current &&
-      exercisesPlans.plans[exercisesPlans.current].list.find(
+      exercises.current &&
+      exercises.plans[exercises.current].list.find(
         ex => ex.id === config.id
       )) ||
     {};

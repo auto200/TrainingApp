@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { useSettings, actionTypes } from "../../contexts/SettingsContext";
+import { useSettings } from "../../contexts/SettingsContext";
+import { useExercises, actionTypes } from "../../contexts/ExercisesContext";
 import { useModal } from "../../contexts/ModalContext";
 import {
   Select,
@@ -31,11 +32,11 @@ const StyledAddButton = styled(Add)`
 
 const ExercisesPlansManager = () => {
   const {
-    settings: { exercisesPlans, currentLanguage },
-    dispatch,
+    settings: { currentLanguage },
   } = useSettings();
+  const { exercises, dispatch } = useExercises();
   const { setCurrentModal, closeModal } = useModal();
-  const noPlans = !Object.keys(exercisesPlans.plans).length;
+  const noPlans = !Object.keys(exercises.plans).length;
   const EMPTY_PLAN = "EMPTY_PLAN";
   const addNewPlan = exercisesPlansManager.dialogs.addNewPlan;
   const editPlanName = exercisesPlansManager.dialogs.editPlanName;
@@ -44,7 +45,7 @@ const ExercisesPlansManager = () => {
     const value = e.target.value;
     if (value === EMPTY_PLAN) return;
     dispatch({
-      type: actionTypes.SET_CURRENT_EXERCISES_PLAN,
+      type: actionTypes.SET_CURRENT_EXERCISE_PLAN,
       payload: value,
     });
   };
@@ -60,7 +61,7 @@ const ExercisesPlansManager = () => {
           currentLanguage
         ],
       initialValues: {
-        planName: exercisesPlans.current,
+        planName: exercises.current,
       },
       closeButtonText: utils.cancel[currentLanguage],
       onClose: closeModal,
@@ -71,8 +72,8 @@ const ExercisesPlansManager = () => {
         }
         //check if other plans incudes new name
         else if (
-          Object.keys(exercisesPlans.plans)
-            .filter(el => el !== exercisesPlans.current)
+          Object.keys(exercises.plans)
+            .filter(el => el !== exercises.current)
             .includes(values.planName)
         ) {
           errors.planName =
@@ -82,12 +83,12 @@ const ExercisesPlansManager = () => {
       },
       confirmButtonText: utils.change[currentLanguage],
       onConfirm: ({ planName }) => {
-        if (planName === exercisesPlans.current) {
+        if (planName === exercises.current) {
           closeModal();
           return;
         }
         dispatch({
-          type: actionTypes.EDIT_CURRENT_EXERCISES_PLAN_NAME,
+          type: actionTypes.EDIT_CURRENT_EXERCISE_PLAN_NAME,
           payload: planName,
         });
         closeModal();
@@ -98,13 +99,9 @@ const ExercisesPlansManager = () => {
   const showAddPlanModal = () => {
     setCurrentModal({
       type: modalTypes.SINGLE_INPUT,
-      title: exercisesPlansManager.dialogs.addNewPlan.title[currentLanguage],
-      inputLabel:
-        exercisesPlansManager.dialogs.addNewPlan.inputLabel[currentLanguage],
-      inputPlaceholder:
-        exercisesPlansManager.dialogs.addNewPlan.inputPlaceholder[
-          currentLanguage
-        ],
+      title: addNewPlan.title[currentLanguage],
+      inputLabel: addNewPlan.inputLabel[currentLanguage],
+      inputPlaceholder: addNewPlan.inputPlaceholder[currentLanguage],
       initialValues: {
         planName: "",
       },
@@ -114,9 +111,7 @@ const ExercisesPlansManager = () => {
         const errors = {};
         if (!values.planName.length) {
           errors.planName = addNewPlan.inputErrors.empty[currentLanguage];
-        } else if (
-          Object.keys(exercisesPlans.plans).includes(values.planName)
-        ) {
+        } else if (Object.keys(exercises.plans).includes(values.planName)) {
           errors.planName =
             addNewPlan.inputErrors.alreadyExists[currentLanguage];
         }
@@ -125,7 +120,7 @@ const ExercisesPlansManager = () => {
       confirmButtonText: utils.add[currentLanguage],
       onConfirm: ({ planName }) => {
         dispatch({
-          type: actionTypes.CREATE_EXERCISES_PLAN,
+          type: actionTypes.CREATE_EXERCISE_PLAN,
           payload: {
             name: planName,
             id: uuid(),
@@ -133,7 +128,7 @@ const ExercisesPlansManager = () => {
           },
         });
         dispatch({
-          type: actionTypes.SET_CURRENT_EXERCISES_PLAN,
+          type: actionTypes.SET_CURRENT_EXERCISE_PLAN,
           payload: planName,
         });
         closeModal();
@@ -146,7 +141,7 @@ const ExercisesPlansManager = () => {
       <div>
         {exercisesPlansManager.dialogs.deletePlan.content[currentLanguage]}
       </div>{" "}
-      <b>{exercisesPlans.current}</b>
+      <b>{exercises.current}</b>
     </>
   );
   const showDeletePlanModal = () => {
@@ -159,7 +154,7 @@ const ExercisesPlansManager = () => {
       confirmButtonText: utils.delete[currentLanguage],
       onConfirm: () => {
         dispatch({
-          type: actionTypes.DELETE_CURRENT_EXERCISES_PLAN,
+          type: actionTypes.DELETE_CURRENT_EXERCISE_PLAN,
         });
         closeModal();
       },
@@ -169,14 +164,14 @@ const ExercisesPlansManager = () => {
   return (
     <StyledWrapper>
       <InputLabel style={{ fontSize: "1.3rem" }} id="selectLabel" shrink>
-        {!exercisesPlans.current
+        {!exercises.current
           ? exercisesPlansManager.selectLabel.noPlanSelected[currentLanguage]
           : exercisesPlansManager.selectLabel.currentPlan[currentLanguage]}
       </InputLabel>
       <div>
         <Select
           onChange={handlePlanChange}
-          value={exercisesPlans.current || EMPTY_PLAN}
+          value={exercises.current || EMPTY_PLAN}
           variant="outlined"
           style={{ width: "150px" }}
           labelId="selectLabel"
@@ -186,8 +181,8 @@ const ExercisesPlansManager = () => {
               {exercisesPlansManager.noPlans[currentLanguage]}
             </MenuItem>
           ) : (
-            Object.keys(exercisesPlans.plans).map(name => (
-              <MenuItem value={name} key={exercisesPlans.plans[name].id}>
+            Object.keys(exercises.plans).map(name => (
+              <MenuItem value={name} key={exercises.plans[name].id}>
                 {name}
               </MenuItem>
             ))

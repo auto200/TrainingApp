@@ -3,6 +3,7 @@ import SEO from "../components/Seo";
 import styled from "styled-components";
 import TrainingStarted from "../components/TrainingStarted";
 import { useSettings } from "../contexts/SettingsContext";
+import { useExercises } from "../contexts/ExercisesContext";
 import { training } from "../translations";
 import BackgroundImage from "gatsby-background-image";
 import { useStaticQuery, graphql } from "gatsby";
@@ -37,8 +38,9 @@ const TrainingPage = () => {
 
   const [isTraining, setIsTraining] = useState(false);
   const {
-    settings: { currentLanguage, exercisesPlans },
+    settings: { currentLanguage },
   } = useSettings();
+  const { exercises: exercisesPlans } = useExercises();
   const plan = exercisesPlans.current;
   const exercises = plan && exercisesPlans.plans[exercisesPlans.current].list;
   const startTraining = () => {

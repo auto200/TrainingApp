@@ -8,6 +8,7 @@ import { Settings as GearIcon, GitHub } from "@material-ui/icons";
 import ExercisesList from "./ExercisesList/ExercisesList";
 import { overview } from "../translations";
 import { useSettings } from "../contexts/SettingsContext";
+import { useExercises } from "../contexts/ExercisesContext";
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -40,9 +41,9 @@ const HeaderSection = styled(Paper)`
 `;
 const Overview = () => {
   const {
-    settings: { currentLanguage, exercisesPlans },
+    settings: { currentLanguage },
   } = useSettings();
-
+  const { exercises } = useExercises();
   return (
     <StyledWrapper>
       <GitHubIconContainer
@@ -63,11 +64,11 @@ const Overview = () => {
       <Title>{overview.title[currentLanguage]}</Title>
       <HeaderSection>
         <ExercisesPlansManager />
-        {exercisesPlans.current && <AddExerciseSection />}
+        {exercises.current && <AddExerciseSection />}
       </HeaderSection>
       <ExercisesList />
-      {exercisesPlans.current &&
-        exercisesPlans.plans[exercisesPlans.current].list.length >= 2 && (
+      {exercises.current &&
+        exercises.plans[exercises.current].list.length >= 2 && (
           <div style={{ textAlign: "right", width: "95%", maxWidth: 550 }}>
             {overview.reorderHint[currentLanguage]}
           </div>

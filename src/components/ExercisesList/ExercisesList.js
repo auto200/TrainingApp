@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import styled from "styled-components";
-import { useSettings, actionTypes } from "../../contexts/SettingsContext";
+import { useSettings } from "../../contexts/SettingsContext";
+import { useExercises, actionTypes } from "../../contexts/ExercisesContext";
 import { exercisesList } from "../../translations";
 import { Paper } from "@material-ui/core";
 import ExerciseItem from "./ExerciseItem";
@@ -24,19 +25,21 @@ const EmptyListWarning = styled.div`
 
 const ExercisesList = () => {
   const {
-    settings: { currentLanguage, exercisesPlans },
-    dispatch,
+    settings: { currentLanguage },
   } = useSettings();
+  const { exercises, dispatch } = useExercises();
   const listRef = useRef(null);
-  const exercises = exercisesPlans.plans[exercisesPlans.current];
-  const previousExercisesCount = useRef(exercises && exercises.list.length);
+  const currentExercisePlan = exercises.plans[exercises.current];
+  const previousExercisesCount = useRef(
+    currentExercisePlan && currentExercisePlan.list.length
+  );
   //autoscroll down on new exercise added
   useEffect(() => {
-    if (!exercises) return;
-    if (previousExercisesCount.current < exercises.list.length) {
+    if (!currentExercisePlan) return;
+    if (previousExercisesCount.current < currentExercisePlan.list.length) {
       listRef.current.scrollTop = listRef.current.scrollHeight;
     }
-    previousExercisesCount.current = exercises.list.length;
+    previousExercisesCount.current = currentExercisePlan.list.length;
   });
   const wrapperVarianst = {
     start: {
@@ -85,13 +88,13 @@ const ExercisesList = () => {
                 animate="end"
                 ref={listRef}
               >
-                {!exercisesPlans.current ? (
+                {!exercises.current ? (
                   <EmptyListWarning>
                     {exercisesList.noPlan[currentLanguage]}
                   </EmptyListWarning>
-                ) : exercises.list.length ? (
+                ) : currentExercisePlan.list.length ? (
                   <AnimatePresence>
-                    {exercises.list.map((exercise, index) => (
+                    {currentExercisePlan.list.map((exercise, index) => (
                       <ExerciseItem
                         key={exercise.id}
                         id={exercise.id}

@@ -1,5 +1,6 @@
 import React from "react";
 import SettingsContextProvider from "./src/contexts/SettingsContext";
+import ExercisesProvider from "./src/contexts/ExercisesContext";
 import MaterialUiThemeProvider from "./src/contexts/MaterialUiTheme";
 import ModalProvider from "./src/contexts/ModalContext";
 import Layout from "./src/components/Layout";
@@ -8,7 +9,9 @@ export const wrapRootElement = ({ element }) => {
   return (
     <MaterialUiThemeProvider>
       <SettingsContextProvider>
-        <ModalProvider>{element}</ModalProvider>
+        <ExercisesProvider>
+          <ModalProvider>{element}</ModalProvider>
+        </ExercisesProvider>
       </SettingsContextProvider>
     </MaterialUiThemeProvider>
   );

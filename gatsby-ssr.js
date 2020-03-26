@@ -1,6 +1,8 @@
 const React = require("react");
 const SettingsContextProvider = require("./src/contexts/SettingsContext")
   .default;
+const ExercisesContextProvider = require("./src/contexts/ExercisesContext")
+  .default;
 const MaterialUiThemeProvider = require("./src/contexts/MaterialUiTheme")
   .default;
 const ModalProvider = require("./src/contexts/ModalContext").default;
@@ -10,7 +12,9 @@ exports.wrapRootElement = ({ element }) => {
   return (
     <MaterialUiThemeProvider>
       <SettingsContextProvider>
-        <ModalProvider>{element}</ModalProvider>
+        <ExercisesContextProvider>
+          <ModalProvider>{element}</ModalProvider>
+        </ExercisesContextProvider>
       </SettingsContextProvider>
     </MaterialUiThemeProvider>
   );
