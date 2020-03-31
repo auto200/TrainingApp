@@ -28,7 +28,7 @@ const ExercisesList = () => {
   const previousExercisesCount = useRef(
     currentExercisePlan && currentExercisePlan.list.length
   );
-  //autoscroll down on new exercise added
+  //autoscroll down on new exercise add
   useEffect(() => {
     if (!currentExercisePlan) return;
     if (previousExercisesCount.current < currentExercisePlan.list.length) {
@@ -86,19 +86,23 @@ const ExercisesList = () => {
                 {!exercises.current ? (
                   <EmptyListWarning>Create training plan</EmptyListWarning>
                 ) : currentExercisePlan.list.length ? (
-                  <AnimatePresence>
-                    {currentExercisePlan.list.map((exercise, index) => (
-                      <ExerciseItem
-                        key={exercise.id}
-                        id={exercise.id}
-                        index={index}
-                        name={exercise.name}
-                        duration={exercise.duration}
-                        rest={exercise.rest}
-                      />
-                    ))}
+                  // AnimatePresence> for some reason couses items to not unmount at all, this means there is also no exit animation. Updating package did not help
+                  <>
+                    {currentExercisePlan.list.map((exercise, index) => {
+                      return (
+                        <ExerciseItem
+                          key={exercise.id}
+                          id={exercise.id}
+                          index={index}
+                          name={exercise.name}
+                          duration={exercise.duration}
+                          rest={exercise.rest}
+                        />
+                      );
+                    })}
                     {provided.placeholder}
-                  </AnimatePresence>
+                    {/*</AnimatePresence>*/}
+                  </>
                 ) : (
                   <EmptyListWarning>
                     This plan doesn't have any exercises yet. You can add them

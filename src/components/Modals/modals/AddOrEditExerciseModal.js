@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { useExercises, actionTypes } from "../../../contexts/ExercisesContext";
 import { Formik, useField, Form } from "formik";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import * as yup from "yup";
 
 export const TYPES = {
@@ -35,7 +35,7 @@ const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
     (config.type === TYPES.EDIT &&
       exercises.current &&
       exercises.plans[exercises.current].list.find(
-        ex => ex.id === config.id
+        (ex) => ex.id === config.id
       )) ||
     {};
 
@@ -66,7 +66,7 @@ const AddOrEditExerciseDialog = ({ config = {}, onClose }) => {
     }) ||
     defaultValues;
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     if (config.type === TYPES.ADD) {
       dispatch({
         type: actionTypes.ADD_EXERCISE,

@@ -51,7 +51,7 @@ const TrainingPage = () => {
   } else if (!exercises.length) {
     InnerComponent = (
       <TapToStart>
-        "You dont have any exercised added yet. Change it by going to overview!"
+        You dont have any exercised added yet. Change it by going to overview!
       </TapToStart>
     );
   } else if (!isTraining) {

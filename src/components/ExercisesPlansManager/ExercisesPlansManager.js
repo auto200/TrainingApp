@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import { Edit, DeleteForever, Add } from "@material-ui/icons";
 import modalTypes from "../Modals/modalTypes";
-import uuid from "uuid/v4";
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -108,11 +107,7 @@ const ExercisesPlansManager = () => {
       onConfirm: ({ planName }) => {
         dispatch({
           type: actionTypes.CREATE_PLAN,
-          payload: {
-            name: planName,
-            id: uuid(),
-            list: [],
-          },
+          payload: planName,
         });
         dispatch({
           type: actionTypes.SET_CURRENT_PLAN,
