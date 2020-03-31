@@ -1,10 +1,12 @@
-import React, { createContext, useEffect, useReducer, useContext } from "react";
+import React, { createContext, useEffect, useContext } from "react";
+import useImmerReducer from "../utils/hooks/useImmerReducer";
+import { v4 as uuid } from "uuid";
 
 const ExercisesContext = createContext();
 
 const initialState = {
   current: "",
-  plans: {}, // aight, this should be an array
+  plans: {},
 };
 
 export const actionTypes = {
@@ -22,82 +24,73 @@ export const actionTypes = {
 const reducer = (state, action) => {
   switch (action.type) {
     case actionTypes.SET_EXERCISES: {
-      return action.payload;
+      Object.entries(action.payload).forEach(([key, value]) => {
+        state[key] = value;
+      });
+      return;
     }
     case actionTypes.SET_CURRENT_PLAN: {
-      return { ...state, current: action.payload };
+      state.current = action.payload;
+      return;
     }
     case actionTypes.CREATE_PLAN: {
-      const newState = { ...state };
-      newState.plans[action.payload.name] = {
-        id: action.payload.id,
-        list: action.payload.list,
+      const name = action.payload;
+      if (Object.keys(state.plans).includes(name)) return;
+      state.plans[name] = {
+        id: uuid(),
+        list: [],
       };
-      return newState;
+      return;
     }
     case actionTypes.ADD_EXERCISE: {
-      const newState = { ...state };
-      const currentPlan = state.current;
-      newState.plans[currentPlan].list = [
-        ...newState.plans[currentPlan].list,
-        action.payload,
-      ];
-      return newState;
+      state.plans[state.current].list.push(action.payload);
+      return;
     }
     case actionTypes.DELETE_CURRENT_PLAN: {
-      const newState = { ...state };
-      delete newState.plans[newState.current];
+      delete state.plans[state.current];
       // select any other or no plan as current
-      newState.current =
-        Object.keys(newState.plans).filter(el => el !== newState.current)[0] ||
-        "";
-      return newState;
-      //TODO: wtf is this^^^ i mean it works for now but dive into it
+      state.current =
+        Object.keys(state.plans).find((el) => el !== state.current) || "";
+      return;
     }
     case actionTypes.EDIT_CURRENT_PLAN_NAME: {
-      const newState = { ...state };
-      const current = newState.current;
-      //name did not change
-      if (current === action.payload) return state;
-      const plans = newState.plans;
-      const plan = { ...plans[current] };
-      delete plans[current];
-      plans[action.payload] = plan;
-      newState.current = action.payload;
-      return newState;
+      if (Object.keys(state.plans).includes(action.payload)) return;
+
+      const newName = action.payload;
+      state.plans[newName] = state.plans[state.current];
+      delete state.plans[state.current];
+      state.current = newName;
+
+      return;
     }
     case actionTypes.DELETE_EXERCISE: {
-      const newState = { ...state };
-      const current = newState.current;
-      newState.plans[current].list = newState.plans[current].list.filter(
-        el => el.id !== action.payload
+      state.plans[state.current].list = state.plans[state.current].list.filter(
+        (plan) => plan.id !== action.payload
       );
-      return newState;
+      return;
     }
     case actionTypes.EDIT_EXERCISE: {
-      const newState = { ...state };
-      const current = newState.current;
-      const exerciseIndex = newState.plans[current].list.findIndex(
-        el => el.id === action.payload.id
+      const current = state.current;
+      const exerciseIndex = state.plans[current].list.findIndex(
+        (el) => el.id === action.payload.id
       );
       if (exerciseIndex > -1) {
-        const exercise = newState.plans[current].list[exerciseIndex];
-        newState.plans[current].list[exerciseIndex] = {
-          ...exercise,
-          ...action.payload.newValues,
-        };
+        const { name, duration, rest } = action.payload.newValues;
+        state.plans[current].list[exerciseIndex].name = name;
+        state.plans[current].list[exerciseIndex].duration = duration;
+        state.plans[current].list[exerciseIndex].rest = rest;
       }
-      return newState;
+      return;
     }
     case actionTypes.REORDER_EXERCISES: {
       // refference: https://codesandbox.io/s/vertical-list-txfzj
-      const newState = { ...state };
+
       const currentPlan = state.current;
       const { source, destination } = action.payload;
-      const plan = newState.plans[currentPlan].list;
+      const plan = state.plans[currentPlan].list;
       const [removed] = plan.splice(source, 1);
       plan.splice(destination, 0, removed);
-      return newState;
+      return;
     }
     default:
       throw new Error("Invalid action type");
@@ -105,7 +98,7 @@ const reducer = (state, action) => {
 };
 
 const ExercisesContextProvider = ({ children }) => {
-  const [exercises, dispatch] = useReducer(reducer, initialState);
+  const [exercises, dispatch] = useImmerReducer(reducer, initialState);
   useEffect(() => {
     try {
       const storedExercises = JSON.parse(localStorage.getItem("exercises"));

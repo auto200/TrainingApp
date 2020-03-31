@@ -1,4 +1,5 @@
-import React, { createContext, useEffect, useReducer, useContext } from "react";
+import React, { createContext, useEffect, useContext } from "react";
+import useImmerReducer from "../utils/hooks/useImmerReducer";
 import useSpeechSyntesis from "../utils/hooks/useSpeechSynthesis";
 
 const SettingsContext = createContext();
@@ -26,30 +27,30 @@ export const actionTypes = {
 const reducer = (state, action) => {
   switch (action.type) {
     case actionTypes.SET_SETTINGS: {
-      return action.payload;
+      Object.entries(action.payload).forEach(([key, value]) => {
+        state[key] = value;
+      });
+      return;
     }
     case actionTypes.TOGGLE_TTS: {
-      const newState = { ...state };
-      newState.speechSynth.enabled = !newState.speechSynth.enabled;
-      return newState;
+      state.speechSynth.enabled = !state.speechSynth.enabled;
+      return;
     }
     case actionTypes.SET_SPEECH_SYNTH_SUPPORTED: {
-      const newState = { ...state };
-      newState.speechSynth.supported = action.payload;
-      return newState;
+      state.speechSynth.supported = action.payload;
+      return;
     }
     case actionTypes.SET_SPEECH_SYNTH_VOICES: {
-      const newState = { ...state };
-      newState.speechSynth.voices = action.payload;
-      return newState;
+      state.speechSynth.voices = action.payload;
+      return;
     }
     case actionTypes.SET_SPEECH_SYNTH_SELECTED_VOICE_INDEX: {
-      const newState = { ...state };
-      newState.speechSynth.selectedVoiceIndex = action.payload;
-      return newState;
+      state.speechSynth.selectedVoiceIndex = action.payload;
+      return;
     }
     case actionTypes.TOGGLE_VIBRATIONS: {
-      return { ...state, vibrations: !state.vibrations };
+      state.vibrations = !state.vibrations;
+      return;
     }
     default:
       throw new Error("Invalid action type");
@@ -57,7 +58,7 @@ const reducer = (state, action) => {
 };
 
 const SettingsContextProvider = ({ children }) => {
-  const [settings, dispatch] = useReducer(reducer, initialState);
+  const [settings, dispatch] = useImmerReducer(reducer, initialState);
   const { supported: speechSynthSupported, voices } = useSpeechSyntesis();
 
   useEffect(() => {
