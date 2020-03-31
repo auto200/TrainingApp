@@ -38,7 +38,7 @@ const ExercisesPlansManager = () => {
     const value = e.target.value;
     if (value === EMPTY_PLAN) return;
     dispatch({
-      type: actionTypes.SET_CURRENT_EXERCISE_PLAN,
+      type: actionTypes.SET_CURRENT_PLAN,
       payload: value,
     });
   };
@@ -76,7 +76,7 @@ const ExercisesPlansManager = () => {
           return;
         }
         dispatch({
-          type: actionTypes.EDIT_CURRENT_EXERCISE_PLAN_NAME,
+          type: actionTypes.EDIT_CURRENT_PLAN_NAME,
           payload: planName,
         });
         closeModal();
@@ -107,7 +107,7 @@ const ExercisesPlansManager = () => {
       confirmButtonText: "Add",
       onConfirm: ({ planName }) => {
         dispatch({
-          type: actionTypes.CREATE_EXERCISE_PLAN,
+          type: actionTypes.CREATE_PLAN,
           payload: {
             name: planName,
             id: uuid(),
@@ -115,7 +115,7 @@ const ExercisesPlansManager = () => {
           },
         });
         dispatch({
-          type: actionTypes.SET_CURRENT_EXERCISE_PLAN,
+          type: actionTypes.SET_CURRENT_PLAN,
           payload: planName,
         });
         closeModal();
@@ -139,7 +139,7 @@ const ExercisesPlansManager = () => {
       confirmButtonText: "Delete",
       onConfirm: () => {
         dispatch({
-          type: actionTypes.DELETE_CURRENT_EXERCISE_PLAN,
+          type: actionTypes.DELETE_CURRENT_PLAN,
         });
         closeModal();
       },

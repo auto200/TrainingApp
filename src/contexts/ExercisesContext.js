@@ -11,10 +11,10 @@ export const actionTypes = {
   ADD_EXERCISE: "ADD_EXERCISE",
   EDIT_EXERCISE: "EDIT_EXERCISE",
   SET_EXERCISES: "SET_EXERCISES",
-  SET_CURRENT_EXERCISE_PLAN: "SET_CURRENT_EXERCISE_PLAN",
-  CREATE_EXERCISE_PLAN: "CREATE_EXERCISE_PLAN",
-  DELETE_CURRENT_EXERCISE_PLAN: "DELETE_CURRENT_EXERCISE_PLAN",
-  EDIT_CURRENT_EXERCISE_PLAN_NAME: "EDIT_CURRENT_EXERCISE_PLAN_NAME",
+  SET_CURRENT_PLAN: "SET_CURRENT_PLAN",
+  CREATE_PLAN: "CREATE_PLAN",
+  DELETE_CURRENT_PLAN: "DELETE_CURRENT_PLAN",
+  EDIT_CURRENT_PLAN_NAME: "EDIT_CURRENT_PLAN_NAME",
   DELETE_EXERCISE: "DELETE_EXERCISE",
   REORDER_EXERCISES: "REORDER_EXERCISES",
 };
@@ -24,10 +24,10 @@ const reducer = (state, action) => {
     case actionTypes.SET_EXERCISES: {
       return action.payload;
     }
-    case actionTypes.SET_CURRENT_EXERCISE_PLAN: {
+    case actionTypes.SET_CURRENT_PLAN: {
       return { ...state, current: action.payload };
     }
-    case actionTypes.CREATE_EXERCISE_PLAN: {
+    case actionTypes.CREATE_PLAN: {
       const newState = { ...state };
       newState.plans[action.payload.name] = {
         id: action.payload.id,
@@ -44,7 +44,7 @@ const reducer = (state, action) => {
       ];
       return newState;
     }
-    case actionTypes.DELETE_CURRENT_EXERCISE_PLAN: {
+    case actionTypes.DELETE_CURRENT_PLAN: {
       const newState = { ...state };
       delete newState.plans[newState.current];
       // select any other or no plan as current
@@ -54,7 +54,7 @@ const reducer = (state, action) => {
       return newState;
       //TODO: wtf is this^^^ i mean it works for now but dive into it
     }
-    case actionTypes.EDIT_CURRENT_EXERCISE_PLAN_NAME: {
+    case actionTypes.EDIT_CURRENT_PLAN_NAME: {
       const newState = { ...state };
       const current = newState.current;
       //name did not change
