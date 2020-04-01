@@ -16,11 +16,14 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const StyledAddButton = styled(Add)`
+const StyledAddIconButton = styled(IconButton)`
   @keyframes shine {
+    from {
+      transform: scale(0.9) translateZ(0px);
+    }
     to {
-      color: ${({ theme }) => theme.colors.green};
-      background-color: ${({ theme }) => theme.colors.dark};
+      background-color: #f50057;
+      transform: scale(1.1) translateZ(0px);
     }
   }
   border-radius: 50%;
@@ -33,7 +36,7 @@ const ExercisesPlansManager = () => {
   const noPlans = !Object.keys(exercises.plans).length;
   const EMPTY_PLAN = "EMPTY_PLAN";
 
-  const handlePlanChange = e => {
+  const handlePlanChange = (e) => {
     const value = e.target.value;
     if (value === EMPTY_PLAN) return;
     dispatch({
@@ -53,7 +56,7 @@ const ExercisesPlansManager = () => {
       },
       closeButtonText: "Cancel",
       onClose: closeModal,
-      validate: values => {
+      validate: (values) => {
         const errors = {};
         if (!values.planName.length) {
           errors.planName = "Please, provide plan name";
@@ -61,7 +64,7 @@ const ExercisesPlansManager = () => {
         //check if other plans incudes new name
         else if (
           Object.keys(exercises.plans)
-            .filter(el => el !== exercises.current)
+            .filter((el) => el !== exercises.current)
             .includes(values.planName)
         ) {
           errors.planName = "This plan with this name already exists";
@@ -94,7 +97,7 @@ const ExercisesPlansManager = () => {
       },
       closeButtonText: "Cancel",
       onClose: closeModal,
-      validate: values => {
+      validate: (values) => {
         const errors = {};
         if (!values.planName.length) {
           errors.planName = "Please, provide plan name";
@@ -157,7 +160,7 @@ const ExercisesPlansManager = () => {
           {noPlans ? (
             <MenuItem value={EMPTY_PLAN}>No plans</MenuItem>
           ) : (
-            Object.keys(exercises.plans).map(name => (
+            Object.keys(exercises.plans).map((name) => (
               <MenuItem value={name} key={exercises.plans[name].id}>
                 {name}
               </MenuItem>
@@ -180,12 +183,12 @@ const ExercisesPlansManager = () => {
             </span>
           </Tooltip>
           <Tooltip title="Add new plan">
-            <IconButton onClick={showAddPlanModal}>
-              <StyledAddButton
-                shine={noPlans ? 1 : 0}
-                fontSize={noPlans ? "large" : "default"}
-              />
-            </IconButton>
+            <StyledAddIconButton
+              onClick={showAddPlanModal}
+              shine={noPlans ? 1 : 0}
+            >
+              <Add fontSize={noPlans ? "large" : "default"} />
+            </StyledAddIconButton>
           </Tooltip>
         </div>
       </div>
