@@ -3,21 +3,21 @@ import styled from "styled-components";
 import { useExercises, actionTypes } from "../../contexts/ExercisesContext";
 import { Paper } from "@material-ui/core";
 import ExerciseItem from "./ExerciseItem";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 const ExercisesListWrapper = styled(motion.custom(Paper))`
   height: 40vh;
   width: 100%;
   display: flex;
+  text-align: center;
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: auto;
 `;
-const EmptyListWarning = styled.div`
+const EmptyListWarning = styled(motion.div)`
   margin: auto;
   font-size: 1.6rem;
-  text-align: center;
   padding: 5px;
 `;
 
@@ -48,7 +48,7 @@ const ExercisesList = () => {
       },
     },
   };
-  const onDragEnd = result => {
+  const onDragEnd = (result) => {
     const { source, destination } = result;
 
     //component (finger/cursor) must be released inside list
@@ -71,7 +71,7 @@ const ExercisesList = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="exercisesList">
-        {provided => {
+        {(provided) => {
           return (
             <div
               ref={provided.innerRef}
@@ -84,7 +84,14 @@ const ExercisesList = () => {
                 ref={listRef}
               >
                 {!exercises.current ? (
-                  <EmptyListWarning>Create training plan</EmptyListWarning>
+                  <EmptyListWarning
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    //reset animation
+                    key={Math.random()}
+                  >
+                    Create training plan
+                  </EmptyListWarning>
                 ) : currentExercisePlan.list.length ? (
                   // AnimatePresence> for some reason couses items to not unmount at all, this means there is also no exit animation. Updating package did not help
                   <>
@@ -104,9 +111,11 @@ const ExercisesList = () => {
                     {/*</AnimatePresence>*/}
                   </>
                 ) : (
-                  <EmptyListWarning>
-                    This plan doesn't have any exercises yet. You can add them
-                    above!
+                  <EmptyListWarning
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    This doesn't have any exercises yet. You can add them above!
                   </EmptyListWarning>
                 )}
               </ExercisesListWrapper>
