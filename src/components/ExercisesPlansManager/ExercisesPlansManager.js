@@ -11,24 +11,12 @@ import {
 } from "@material-ui/core";
 import { Edit, DeleteForever, Add } from "@material-ui/icons";
 import modalTypes from "../Modals/modalTypes";
-
+import { motion } from "framer-motion";
 const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const StyledAddIconButton = styled(IconButton)`
-  @keyframes shine {
-    from {
-      transform: scale(0.9) translateZ(0px);
-    }
-    to {
-      background-color: #f50057;
-      transform: scale(1.1) translateZ(0px);
-    }
-  }
-  border-radius: 50%;
-  animation: ${({ shine }) => shine && "shine 2s alternate infinite"};
-`;
+const StyledAddIconButton = motion.custom(IconButton);
 
 const ExercisesPlansManager = () => {
   const { exercises, dispatch } = useExercises();
@@ -185,7 +173,11 @@ const ExercisesPlansManager = () => {
           <Tooltip title="Add new plan">
             <StyledAddIconButton
               onClick={showAddPlanModal}
-              shine={noPlans ? 1 : 0}
+              animate={noPlans ? { scale: [0.8, 1.2, 0.8] } : {}}
+              transition={{ duration: 3, loop: Infinity }}
+              noPlans={noPlans}
+              key={noPlans}
+              initial={noPlans ? { backgroundColor: "#f50057" } : {}}
             >
               <Add fontSize={noPlans ? "large" : "default"} />
             </StyledAddIconButton>
