@@ -4,7 +4,7 @@ DEMO 👉 https://train.auto200.eu/
 
 Create your own training plans, add exercises and make your home workout easier.
 
-Written with [Gatsby](https://github.com/gatsbyjs/gatsby/)
+Written in [Gatsby](https://github.com/gatsbyjs/gatsby/)
 
 ## Prerequisites
 
@@ -15,10 +15,10 @@ Written and tested on [Node.js](https://nodejs.org) version 12.16.3
 Get the code by either cloning this repository using git
 
 ```
-git clone https://github.com/auto200/Tibia-Highscores.git
+git clone https://github.com/auto200/Training-App.git
 ```
 
-... or [downloading source code](https://github.com/auto200/Tibia-Highscores/archive/master.zip) code as a zip archive.
+... or [downloading source code](https://github.com/auto200/Training-App/archive/master.zip) code as a zip archive.
 
 Once downloaded, open the terminal in the project directory, and install dependencies with:
 
