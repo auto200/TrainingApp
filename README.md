@@ -1,5 +1,7 @@
 # Training App
 
+DEMO 👉 https://train.auto200.eu/
+
 <img src="preview.gif" alt="preview" width="150px">
 
 Create your own training plans, add exercises and make your home workout easier.
