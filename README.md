@@ -32,12 +32,12 @@ npm install
 
 # IMPORTANT
 
-If you want to test your application during development on other devices in your local network, change start script in `package.json` accordingly:
+If during development you want to test application on other devices in your local network, then change "start" script in `package.json` accordingly:
 `"start": "gatsby develop -H HOST_LOCAL_IP -p PORT",`
 It defaults to my local ip.
 If you don't care about other devices just change it like so:
 `"start": "gatsby develop",`
-Default port (no port specified) is 8000
+Default port is 8000
 
 Then start the app with:
 
